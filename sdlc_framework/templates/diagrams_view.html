@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Diagrams - {{ project.project_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI SDLC Framework</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/project/{{ project.project_id }}" class="nav-link">Project</a>
+                <a href="#" class="nav-link active">Diagrams</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Architecture Diagrams</h1>
+            <p>{{ project.project_name }} - System Architecture Overview</p>
+            <a href="/project/{{ project.project_id }}" class="btn btn-secondary">Back to Project</a>
+        </div>
+
+        <!-- Diagrams Grid -->
+        <div class="diagrams-gallery">
+            
+            {# System Architecture Diagram #}
+            <div class="diagram-container">
+                <div class="diagram-header">
+                    <h2>System Architecture</h2>
+                    <button class="btn btn-small" onclick="downloadDiagram('system_architecture')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="diagram-content mermaid" id="system_architecture">
+                    {% if diagrams.get('system_architecture.mmd') %}
+                        {{ diagrams['system_architecture.mmd'] }}
+                    {% else %}
+                        graph TD
+                        A["User Interface"] -->|HTTP/REST| B["API Gateway"]
+                        B --> C["Requirements Analyzer"]
+                        B --> D["Code Generator"]
+                        B --> E["Defect Analyzer"]
+                        C --> F["Embedding Engine"]
+                        D --> G["GitHub Code Repository"]
+                        F --> H["Vector Database"]
+                        E --> I["Defect Model"]
+                        I --> J["Quality Checker"]
+                        J --> K["Cloud Deployment"]
+                        K --> L["Maintenance Monitor"]
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Database Schema Diagram #}
+            <div class="diagram-container">
+                <div class="diagram-header">
+                    <h2>Database Schema</h2>
+                    <button class="btn btn-small" onclick="downloadDiagram('database_schema')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="diagram-content mermaid" id="database_schema">
+                    {% if diagrams.get('database_schema.mmd') %}
+                        {{ diagrams['database_schema.mmd'] }}
+                    {% else %}
+                        erDiagram
+                        PROJECTS ||--o{ PHASES : has
+                        PROJECTS {
+                            string project_id PK
+                            string project_name
+                            string created_at
+                            string status
+                        }
+                        PHASES {
+                            string phase_id PK
+                            int phase_number
+                            string status
+                            string description
+                            string completed_at
+                        }
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Data Flow Diagram #}
+            <div class="diagram-container">
+                <div class="diagram-header">
+                    <h2>Data Flow</h2>
+                    <button class="btn btn-small" onclick="downloadDiagram('data_flow')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="diagram-content mermaid" id="data_flow">
+                    {% if diagrams.get('data_flow.mmd') %}
+                        {{ diagrams['data_flow.mmd'] }}
+                    {% else %}
+                        graph LR
+                        A["SRS Document"] -->|Extract Text| B["Text Preprocessing"]
+                        B -->|Chunk| C["Embedding Generation"]
+                        C -->|Semantic Search| D["GitHub Code Search"]
+                        A -->|Parse Requirements| E["Requirement Extraction"]
+                        E -->|Input| F["Code Generator"]
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Technology Stack #}
+            <div class="diagram-container">
+                <div class="diagram-header">
+                    <h2>Technology Stack</h2>
+                    <button class="btn btn-small" onclick="downloadDiagram('technology_stack')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="diagram-content mermaid" id="technology_stack">
+                    {% if diagrams.get('technology_stack.mmd') %}
+                        {{ diagrams['technology_stack.mmd'] }}
+                    {% else %}
+                        graph TB
+                        subgraph Frontend["Frontend"]
+                            Flask["Flask Web Framework"]
+                            JavaScript["JavaScript/Mermaid.js"]
+                        end
+                        subgraph Backend["Backend"]
+                            Embeddings["Sentence Transformers"]
+                            LLM["LangChain/GPT-4"]
+                        end
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagram Information -->
+        <section class="diagram-info-section">
+            <h2>Diagram Descriptions</h2>
+            
+            <div class="info-item">
+                <h3>System Architecture</h3>
+                <p>Illustrates the overall system design showing how different components interact with each other. It includes the user interface, API gateway, analyzers, and cloud deployment infrastructure.</p>
+            </div>
+
+            <div class="info-item">
+                <h3>Database Schema</h3>
+                <p>Shows the entity-relationship diagram for the database design, including tables for projects, phases, requirements, embeddings, code artifacts, and defects.</p>
+            </div>
+
+            <div class="info-item">
+                <h3>Data Flow Diagram</h3>
+                <p>Depicts how data flows through the system from SRS documents through various processing stages to deployment. Shows the integration with GitHub code repositories and external services.</p>
+            </div>
+
+            <div class="info-item">
+                <h3>Technology Stack</h3>
+                <p>Displays all the technologies and frameworks used in the project including frontend frameworks, backend services, ML models, data storage, and cloud deployment platforms.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 AI-Enabled SDLC Framework. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+        mermaid.contentLoaded();
+
+        function downloadDiagram(diagramId) {
+            const svg = document.querySelector(`#${diagramId} svg`);
+            if (!svg) {
+                alert('Diagram not yet rendered. Please wait a moment and try again.');
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            const serializer = new XMLSerializer();
+            const svgString = serializer.serializeToString(svg);
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(svgBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${diagramId}.svg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>

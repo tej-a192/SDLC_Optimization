@@ -1,0 +1,36 @@
+{
+  "status": "completed",
+  "total_tests": 5,
+  "passed": 4,
+  "failed": 1,
+  "coverage": 85.5,
+  "tests": [
+    {
+      "test_name": "test_requirement_parsing",
+      "status": "passed",
+      "duration": "0.23s"
+    },
+    {
+      "test_name": "test_embedding_generation",
+      "status": "passed",
+      "duration": "1.45s"
+    },
+    {
+      "test_name": "test_code_generation",
+      "status": "passed",
+      "duration": "2.10s"
+    },
+    {
+      "test_name": "test_api_endpoints",
+      "status": "passed",
+      "duration": "0.56s"
+    },
+    {
+      "test_name": "test_database_operations",
+      "status": "failed",
+      "duration": "1.20s",
+      "error": "Connection timeout"
+    }
+  ],
+  "generated_at": "2026-02-12T21:38:07.403712"
+}

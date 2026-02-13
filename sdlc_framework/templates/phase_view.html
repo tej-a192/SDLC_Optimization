@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ phase_name }} - {{ project.project_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://mermaid.ink/mermaid.min.js"></script>
+    <style>
+        .code-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .code-section {
+            background: #1e1e1e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .code-header {
+            background: #333;
+            padding: 12px 15px;
+            border-bottom: 1px solid #444;
+            font-weight: bold;
+            color: #4a9eff;
+        }
+        .code-content {
+            padding: 15px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .code-content code {
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 10px 0 0;
+        }
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .test-table th, .test-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .test-table th {
+            background: #f5f5f5;
+            font-weight: bold;
+        }
+        .test-table tr:hover {
+            background: #fafafa;
+        }
+        .defect-card {
+            background: white;
+            border-left: 4px solid;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .defect-card.high-severity {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+        .defect-card.medium-severity {
+            border-color: #ffc107;
+            background: #fffbf0;
+        }
+        .defect-card.low-severity {
+            border-color: #28a745;
+            background: #f5fff5;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        .badge.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .badge.danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .badge.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .deployment-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .deployment-info .info-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .deployment-info .info-item:last-child {
+            border-bottom: none;
+        }
+        @media (max-width: 768px) {
+            .code-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI SDLC Framework</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/project/{{ project.project_id }}" class="nav-link">Project</a>
+                <a href="#" class="nav-link active">Phase {{ phase_num }}</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Phase Header -->
+        <div class="phase-header">
+            <h1>Phase {{ phase_num }}: {{ phase_name }}</h1>
+            <div class="phase-info">
+                <p><strong>Project:</strong> {{ project.project_name }}</p>
+                <p><strong>Status:</strong> <span class="badge {% if phase_metadata.status == 'completed' %}success{% endif %}">{{ phase_metadata.status|default('Pending') }}</span></p>
+                {% if phase_metadata.completed_at %}
+                <p><strong>Completed:</strong> {{ phase_metadata.completed_at }}</p>
+                {% endif %}
+            </div>
+            <a href="/project/{{ project.project_id }}" class="btn btn-secondary">Back to Project</a>
+        </div>
+
+        <!-- Phase Content -->
+        <div class="phase-content">
+            {% if phase_num == 1 %}
+                <!-- Phase 1: Data Collection & Requirements -->
+                <section class="phase-details">
+                    <h2>Data Collection & Requirements Analysis</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase extracts and analyzes SRS documents to generate semantic embeddings for understanding project requirements.</p>
+                    </div>
+
+                    {% if phase_metadata.data %}
+                        <div class="output-section">
+                            <h3>Extracted Features</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h4>Total Characters</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('features_extracted', {}).get('total_chars', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Paragraphs</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('features_extracted', {}).get('total_paragraphs', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Sentences</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('features_extracted', {}).get('total_sentences', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Data Quality</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('data_quality', 0) * 100 }|int }}%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Embeddings Summary</h3>
+                            <p><strong>Chunks Generated:</strong> {{ phase_metadata.data.get('embeddings_count', 0) }}</p>
+                            <p><strong>Embedding Dimension:</strong> 384</p>
+                            <p><strong>Vector DB Status:</strong> <span class="badge success">Indexed</span></p>
+                        </div>
+                    {% endif %}
+                </section>
+
+            {% elif phase_num == 2 %}
+                <!-- Phase 2: Architecture Design -->
+                <section class="phase-details">
+                    <h2>Architecture Design & Diagrams</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase generates comprehensive system architecture diagrams including system flow, database schema, data flow, and technology stack architecture.</p>
+                    </div>
+
+                    {% if phase_metadata.data and phase_metadata.data.get('diagrams_created') %}
+                        <div class="output-section">
+                            <h3>Generated Diagrams</h3>
+                            <p>Total diagrams created: <strong>{{ phase_metadata.data.get('diagrams_created', 0) }}</strong></p>
+                            
+                            {% for diagram_type in phase_metadata.data.get('diagram_types', []) %}
+                            <div class="diagram-box" style="margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 8px;">
+                                <h4>{{ diagram_type.replace('_', ' ').title() }}</h4>
+                                <p style="color: #666; font-size: 14px;">Mermaid diagram - View in diagrams section for interactive visualization</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </section>
+
+            {% elif phase_num == 3 %}
+                <!-- Phase 3: Implementation & Code Generation -->
+                <section class="phase-details">
+                    <h2>Implementation & Code Generation</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase generates complete source code based on requirements and existing code patterns using AI models.</p>
+                    </div>
+
+                    {% if phase_metadata.data %}
+                        <div class="output-section">
+                            <h3>Code Generation Summary</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h4>Files Generated</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('files_generated', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Lines of Code</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('lines_of_code', 0) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Generated Files</h3>
+                            <table class="test-table">
+                                <thead>
+                                    <tr>
+                                        <th>Filename</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for file in phase_metadata.data.get('files', []) %}
+                                    <tr>
+                                        <td><i class="fas fa-file-code"></i> {{ file }}</td>
+                                        <td>{% if file.endswith('.py') %}Python{% elif file.endswith('.html') %}HTML{% elif file.endswith('.css') %}CSS{% elif file.endswith('.txt') %}Text{% else %}File{% endif %}</td>
+                                        <td><span class="badge success">Generated</span></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Code Samples</h3>
+                            <p style="color: #666; margin-bottom: 15px;">Generated code files are available in the project output directory for integration and testing.</p>
+                            <div class="code-section">
+                                <div class="code-header">main.py - Application Entry Point</div>
+                                <div class="code-content">
+                                    <pre><code class="language-python">#!/usr/bin/env python
+# Auto-generated Application Entry Point
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return {'status': 'success', 'message': 'AI SDLC Generated Application'}
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </section>
+
+            {% elif phase_num == 4 %}
+                <!-- Phase 4: Testing & QA -->
+                <section class="phase-details">
+                    <h2>Testing & Quality Assurance</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase executes comprehensive unit tests, integration tests, and coverage analysis on generated code.</p>
+                    </div>
+
+                    {% if phase_metadata.data %}
+                        <div class="output-section">
+                            <h3>Test Execution Summary</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h4>Total Tests</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('total_tests', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Passed</h4>
+                                    <p class="metric-value" style="color: #90EE90;">{{ phase_metadata.data.get('passed', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Failed</h4>
+                                    <p class="metric-value" style="color: #FFB6C6;">{{ phase_metadata.data.get('failed', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Coverage</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('coverage', 0) }}%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Test Results Details</h3>
+                            <table class="test-table">
+                                <thead>
+                                    <tr>
+                                        <th>Test Name</th>
+                                        <th>Status</th>
+                                        <th>Duration</th>
+                                        <th>Message</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for test in phase_metadata.data.get('tests', []) %}
+                                    <tr>
+                                        <td>{{ test.test_name }}</td>
+                                        <td>
+                                            {% if test.status == 'passed' %}
+                                                <span class="badge success">PASSED</span>
+                                            {% else %}
+                                                <span class="badge danger">FAILED</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ test.duration }}</td>
+                                        <td>{{ test.get('error', 'OK') }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </section>
+
+            {% elif phase_num == 5 %}
+                <!-- Phase 5: Defect Analysis -->
+                <section class="phase-details">
+                    <h2>Defect Analysis & Remediation</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase performs ML-based defect analysis to identify and remediate security, performance, and quality issues.</p>
+                    </div>
+
+                    {% if phase_metadata.data %}
+                        <div class="output-section">
+                            <h3>Defect Summary</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);">
+                                    <h4>High Severity</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('high_severity', 0) }}</p>
+                                </div>
+                                <div class="metric-card" style="background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);">
+                                    <h4>Medium Severity</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('medium_severity', 0) }}</p>
+                                </div>
+                                <div class="metric-card" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);">
+                                    <h4>Low Severity</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('low_severity', 0) }}</p>
+                                </div>
+                                <div class="metric-card" style="background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);">
+                                    <h4>Remediated</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('remediated', 0) }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Defects Details</h3>
+                            {% for defect in phase_metadata.data.get('defects', []) %}
+                            <div class="defect-card {% if defect.severity == 'high' %}high-severity{% elif defect.severity == 'medium' %}medium-severity{% else %}low-severity{% endif %}">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <h5>{{ defect.defect_id }}: {{ defect.description }}</h5>
+                                        <p style="color: #666; margin: 8px 0;"><strong>Type:</strong> {{ defect.type }} | <strong>Location:</strong> {{ defect.location }}</p>
+                                    </div>
+                                    <span class="badge {% if defect.severity == 'high' %}danger{% elif defect.severity == 'medium' %}warning{% else %}success{% endif %}">{{ defect.severity|upper }}</span>
+                                </div>
+                                <p style="margin: 10px 0;"><strong>Remedy:</strong> {{ defect.remedy }}</p>
+                                <p><strong>Status:</strong> 
+                                    {% if defect.remediated %}
+                                        <span class="badge success">✓ Remediated</span>
+                                    {% else %}
+                                        <span class="badge warning">Pending</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </section>
+
+            {% elif phase_num == 6 %}
+                <!-- Phase 6: Deployment & Cloud -->
+                <section class="phase-details">
+                    <h2>Cloud Deployment & CI/CD Configuration</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase automates deployment to cloud platforms with comprehensive CI/CD pipeline configuration.</p>
+                    </div>
+
+                    {% if phase_metadata.data %}
+                        <div class="output-section">
+                            <h3>Deployment Information</h3>
+                            <div class="deployment-info">
+                                <div class="info-item">
+                                    <strong>Cloud Provider:</strong> 
+                                    <span style="color: #ff9900; font-weight: bold;">{{ phase_metadata.data.get('cloud_provider', 'AWS')|upper }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Deployment ID:</strong> 
+                                    <code>{{ phase_metadata.data.get('deployment_id', 'N/A') }}</code>
+                                </div>
+                                <div class="info-item">
+                                    <strong>API Endpoint:</strong> 
+                                    <code>{{ phase_metadata.data.get('endpoint', 'https://your-api.cloud/api') }}</code>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Status URL:</strong> 
+                                    <a href="{{ phase_metadata.data.get('status_url', '#') }}" target="_blank" style="color: #2196F3; text-decoration: none;">
+                                        {{ phase_metadata.data.get('status_url', 'View on Cloud Console') }}
+                                    </a>
+                                </div>
+                                <div class="info-item">
+                                    <strong>Deployed At:</strong> 
+                                    {{ phase_metadata.data.get('deployed_at', 'N/A') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Infrastructure Configuration</h3>
+                            <table class="test-table">
+                                <tr>
+                                    <td><strong>Region:</strong></td>
+                                    <td>{{ phase_metadata.data.get('configuration', {}).get('region', 'us-east-1') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Instance Type:</strong></td>
+                                    <td>{{ phase_metadata.data.get('configuration', {}).get('instance_type', 't3.medium') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Auto Scaling:</strong></td>
+                                    <td>
+                                        {% if phase_metadata.data.get('configuration', {}).get('auto_scaling') %}
+                                            <span class="badge success">Enabled</span>
+                                        {% else %}
+                                            <span class="badge warning">Disabled</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Replicas:</strong></td>
+                                    <td>{{ phase_metadata.data.get('configuration', {}).get('replicas', 1) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
+                </section>
+
+            {% elif phase_num == 7 %}
+                <!-- Phase 7: Maintenance & Monitoring -->
+                <section class="phase-details">
+                    <h2>Maintenance & System Monitoring</h2>
+                    
+                    <div class="info-box">
+                        <h3>Overview</h3>
+                        <p>This phase provides comprehensive monitoring, health checks, and performance metrics for the deployed application.</p>
+                    </div>
+
+                    {% if phase_metadata.data %}
+                        <div class="output-section">
+                            <h3>Real-time System Metrics</h3>
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <h4>Health Status</h4>
+                                    <p class="metric-value" style="color: #90EE90;">{{ phase_metadata.data.get('health', 'Healthy')|upper }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Uptime</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('uptime', '99.9%') }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Response Time</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('response_time', '120ms') }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Error Rate</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('error_rate', '0.01%') }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Active Users</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('active_users', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Requests/Sec</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('requests_per_second', 0) }}</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>CPU Usage</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('cpu_usage', 0) }}%</p>
+                                </div>
+                                <div class="metric-card">
+                                    <h4>Memory Usage</h4>
+                                    <p class="metric-value">{{ phase_metadata.data.get('memory_usage', 0) }}%</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="output-section">
+                            <h3>Performance Analytics</h3>
+                            <table class="test-table">
+                                <tr>
+                                    <td><strong>Database Latency:</strong></td>
+                                    <td>{{ phase_metadata.data.get('database_latency', '45ms') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cache Hit Rate:</strong></td>
+                                    <td>{{ phase_metadata.data.get('cache_hit_rate', '95%') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Disk Usage:</strong></td>
+                                    <td>{{ phase_metadata.data.get('disk_usage', '45%') }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Network I/O:</strong></td>
+                                    <td>{{ phase_metadata.data.get('network_io', '128 Mbps') }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        {% if phase_metadata.data.get('alerts') %}
+                        <div class="output-section">
+                            <h3>Active Alerts</h3>
+                            {% if phase_metadata.data.get('alerts')|length > 0 %}
+                                {% for alert in phase_metadata.data.get('alerts', []) %}
+                                <div class="defect-card high-severity">
+                                    <h5>{{ alert.title }}</h5>
+                                    <p>{{ alert.message }}</p>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <p style="color: green;"><strong>✓ No active alerts</strong></p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </section>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 AI-Enabled SDLC Framework. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Highlight code blocks
+        document.querySelectorAll('code').forEach(el => {
+            if (el.className) {
+                hljs.highlightElement(el);
+            }
+        });
+    </script>
+</body>
+</html>

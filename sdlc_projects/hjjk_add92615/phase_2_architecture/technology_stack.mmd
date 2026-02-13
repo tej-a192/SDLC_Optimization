@@ -1,0 +1,26 @@
+graph TB
+    subgraph Frontend
+        Mobile["React Native - Mobile"]
+        Web["React - Web"]
+        PWA["PWA - Offline Support"]
+    end
+    subgraph Backend
+        Gateway["Kong API Gateway"]
+        Services["Microservices - Node.js/Python"]
+        Queue["RabbitMQ - Message Queue"]
+    end
+    subgraph Database
+        Primary["PostgreSQL - Primary"]
+        Replica["PostgreSQL - Replica"]
+        Cache["Redis - Session/Cache"]
+        Search["Elasticsearch - Full Text"]
+    end
+    subgraph Infrastructure
+        Cloud["AWS - Multi-Region"]
+        k8s["Kubernetes - Orchestration"]
+        Monitor["Prometheus/Grafana"]
+    end
+    
+    Frontend --> Backend
+    Backend --> Database
+    Backend --> Infrastructure

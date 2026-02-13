@@ -1,0 +1,12 @@
+graph TD
+    A["User Interface"] -->|HTTP/REST| B["API Gateway"]
+    B --> C["Requirements Analyzer"]
+    B --> D["Code Generator"]
+    B --> E["Defect Analyzer"]
+    C --> F["Embedding Engine"]
+    D --> G["GitHub Code Repository"]
+    F --> H["Vector Database"]
+    E --> I["Defect Model"]
+    I --> J["Quality Checker"]
+    J --> K["Cloud Deployment"]
+    K --> L["Maintenance Monitor"]

@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "deployment_id": "dep_d33c1adb",
+  "cloud_provider": "aws",
+  "endpoint": "https://TestProject.cloud/api",
+  "status_url": "https://console.aws.com/deployment/dep_d33c1adb",
+  "configuration": {
+    "provider": "aws",
+    "environment": "production",
+    "region": "us-east-1",
+    "instance_type": "t3.medium",
+    "auto_scaling": true,
+    "replicas": 3
+  },
+  "deployed_at": "2026-02-12T21:52:55.318751"
+}

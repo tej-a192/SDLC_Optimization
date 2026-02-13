@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project.project_name }} - Project Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI SDLC Framework</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="#" class="nav-link active">Project</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Project Header -->
+        <div class="project-header-section">
+            <h1>{{ project.project_name }}</h1>
+            <div class="project-meta">
+                <p><strong>Project ID:</strong> {{ project.project_id }}</p>
+                <p><strong>Created:</strong> {{ project.created_at }}</p>
+                <div class="project-actions">
+                    <a href="/diagrams/{{ project.project_id }}" class="btn btn-secondary">
+                        <i class="fas fa-diagram-project"></i> View Diagrams
+                    </a>
+                    <button class="btn btn-secondary" onclick="downloadProject()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase Progress -->
+        <section class="phase-progress-section">
+            <h2>Phases Progress</h2>
+            <div class="progress-tracker">
+                {% for i in range(1, 8) %}
+                    {% set phase_data = project.phases.get('phase_' + i|string, {}) %}
+                    <div class="progress-item" onclick="viewPhase({{ i }})">
+                        <div class="progress-circle {% if phase_data.status == 'completed' %}completed{% endif %}">
+                            <i class="fas fa-{% if phase_data.status == 'completed' %}check{% else %}hourglass-half{% endif %}"></i>
+                            <span>{{ i }}</span>
+                        </div>
+                        <p class="progress-label">Phase {{ i }}</p>
+                        <p class="progress-status">{{ phase_data.status|default('Pending') }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Phases Detailed View -->
+        <section class="phases-detail-section">
+            <h2>Phases Overview</h2>
+            
+            <!-- Phase 1: Requirements -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-list-check"></i> Phase 1: Requirements Analysis</h3>
+                    <span class="phase-status {% if project.phases.phase_1.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_1.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Extract and analyze SRS documents to generate word embeddings for semantic understanding.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(1)">View Details</button>
+                </div>
+            </div>
+
+            <!-- Phase 2: Architecture -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-sitemap"></i> Phase 2: Architecture Design</h3>
+                    <span class="phase-status {% if project.phases.phase_2.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_2.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Generate system architecture diagrams including system flow, database schema, and technology stack.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(2)">View Details</button>
+                    <a href="/diagrams/{{ project.project_id }}" class="btn btn-secondary">View Diagrams</a>
+                </div>
+            </div>
+
+            <!-- Phase 3: Code Generation -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-code"></i> Phase 3: Code Generation</h3>
+                    <span class="phase-status {% if project.phases.phase_3.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_3.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Generate source code based on requirements and existing GitHub code patterns.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(3)">View Details</button>
+                </div>
+            </div>
+
+            <!-- Phase 4: Testing -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-vial"></i> Phase 4: Testing</h3>
+                    <span class="phase-status {% if project.phases.phase_4.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_4.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Execute unit tests and integration tests to validate generated code.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(4)">View Details</button>
+                </div>
+            </div>
+
+            <!-- Phase 5: Defect Analysis -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-bug"></i> Phase 5: Defect Analysis</h3>
+                    <span class="phase-status {% if project.phases.phase_5.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_5.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Identify and remediate defects using ML-based defect prediction models.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(5)">View Details</button>
+                </div>
+            </div>
+
+            <!-- Phase 6: Deployment -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-cloud-upload"></i> Phase 6: Cloud Deployment</h3>
+                    <span class="phase-status {% if project.phases.phase_6.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_6.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Deploy to cloud platform (AWS, GCP, Azure) with automated CI/CD pipeline.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(6)">View Details</button>
+                </div>
+            </div>
+
+            <!-- Phase 7: Maintenance -->
+            <div class="phase-card">
+                <div class="phase-card-header">
+                    <h3><i class="fas fa-heartbeat"></i> Phase 7: Maintenance & Monitoring</h3>
+                    <span class="phase-status {% if project.phases.phase_7.status == 'completed' %}completed{% endif %}">
+                        {{ project.phases.phase_7.status|default('Pending') }}
+                    </span>
+                </div>
+                <div class="phase-card-body">
+                    <p>Monitor deployed application and perform maintenance tasks.</p>
+                    <button class="btn btn-primary" onclick="viewPhase(7)">View Details</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Statistics -->
+        <section class="statistics-section">
+            <h2>Project Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h4>Total Phases</h4>
+                    <p class="stat-number">7</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Completed</h4>
+                    <p class="stat-number" id="completed-phases">0</p>
+                </div>
+                <div class="stat-box">
+                    <h4>In Progress</h4>
+                    <p class="stat-number">0</p>
+                </div>
+                <div class="stat-box">
+                    <h4>Pending</h4>
+                    <p class="stat-number" id="pending-phases">7</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 AI-Enabled SDLC Framework. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const projectId = '{{ project.project_id }}';
+
+        function viewPhase(phaseNum) {
+            window.location.href = `/phase/${phaseNum}/${projectId}`;
+        }
+
+        function downloadProject() {
+            window.location.href = `/api/project/${projectId}/export`;
+        }
+
+        // Update phase counts
+        document.addEventListener('DOMContentLoaded', () => {
+            const phases = {{ project.phases | tojson }};
+            let completedCount = 0;
+            let pendingCount = 7;
+
+            for (const phase in phases) {
+                if (phases[phase].status === 'completed') {
+                    completedCount++;
+                    pendingCount--;
+                }
+            }
+
+            document.getElementById('completed-phases').textContent = completedCount;
+            document.getElementById('pending-phases').textContent = pendingCount;
+        });
+    </script>
+</body>
+</html>

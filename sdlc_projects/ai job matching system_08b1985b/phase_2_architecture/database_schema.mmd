@@ -1,0 +1,38 @@
+erDiagram
+    PROJECTS ||--o{{ PHASES : has
+    PROJECTS {{
+        string project_id PK
+        string project_name
+        string created_at
+        string status
+    }}
+    PHASES {{
+        string phase_id PK
+        int phase_number
+        string status
+        string description
+        string completed_at
+    }}
+    REQUIREMENTS ||--o{{ EMBEDDINGS : generates
+    REQUIREMENTS {{
+        string req_id PK
+        string srs_text
+        string summary
+    }}
+    EMBEDDINGS {{
+        string embedding_id PK
+        float vector
+        string chunk_text
+    }}
+    CODE_ARTIFACTS {{
+        string code_id PK
+        string source_code
+        string generated_from
+        float quality_score
+    }}
+    DEFECTS {{
+        string defect_id PK
+        string description
+        string severity
+        string status
+    }}

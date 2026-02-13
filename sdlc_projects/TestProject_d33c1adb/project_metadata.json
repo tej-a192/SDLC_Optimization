@@ -1,0 +1,185 @@
+{
+  "project_name": "TestProject",
+  "project_id": "d33c1adb",
+  "created_at": "2026-02-12T21:52:39.792939",
+  "phases": {
+    "phase_1": {
+      "phase_number": 1,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.280753",
+      "data": {
+        "status": "completed",
+        "total_chunks": 2,
+        "srs_summary": "Build a system",
+        "embedding_format": "numpy_array_as_list",
+        "embeddings_count": 2,
+        "features_extracted": {
+          "total_chars": 14,
+          "total_paragraphs": 1,
+          "total_sentences": 1,
+          "total_words": 3,
+          "avg_sentence_length": 3.0
+        },
+        "generated_at": "2026-02-12T21:52:55.272751"
+      }
+    },
+    "phase_2": {
+      "phase_number": 2,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.288087",
+      "data": {
+        "status": "completed",
+        "diagrams_generated": [
+          "system_architecture",
+          "database_schema",
+          "data_flow",
+          "technology_stack"
+        ],
+        "diagram_count": 4,
+        "generated_at": "2026-02-12T21:52:55.286754"
+      }
+    },
+    "phase_3": {
+      "phase_number": 3,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.304913",
+      "data": {
+        "status": "completed",
+        "total_files": 6,
+        "files": [
+          "main.py",
+          "requirements.txt",
+          "config.py",
+          "models.py",
+          ".env.example",
+          ".gitignore"
+        ],
+        "generated_at": "2026-02-12T21:52:55.290771"
+      }
+    },
+    "phase_4": {
+      "phase_number": 4,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.312755",
+      "data": {
+        "status": "completed",
+        "total_tests": 5,
+        "passed": 4,
+        "failed": 1,
+        "coverage": 85.5,
+        "tests": [
+          {
+            "test_name": "test_requirement_parsing",
+            "status": "passed",
+            "duration": "0.23s"
+          },
+          {
+            "test_name": "test_embedding_generation",
+            "status": "passed",
+            "duration": "1.45s"
+          },
+          {
+            "test_name": "test_code_generation",
+            "status": "passed",
+            "duration": "2.10s"
+          },
+          {
+            "test_name": "test_api_endpoints",
+            "status": "passed",
+            "duration": "0.56s"
+          },
+          {
+            "test_name": "test_database_operations",
+            "status": "failed",
+            "duration": "1.20s",
+            "error": "Connection timeout"
+          }
+        ],
+        "generated_at": "2026-02-12T21:52:55.307754"
+      }
+    },
+    "phase_5": {
+      "phase_number": 5,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.316885",
+      "data": {
+        "status": "completed",
+        "total_defects": 3,
+        "high_severity": 1,
+        "medium_severity": 1,
+        "low_severity": 1,
+        "remediated": 3,
+        "defects": [
+          {
+            "defect_id": "DEF_001",
+            "type": "security",
+            "severity": "high",
+            "description": "SQL Injection vulnerability in user input handling",
+            "location": "models.py:45",
+            "remedy": "Use parameterized queries",
+            "remediated": true
+          },
+          {
+            "defect_id": "DEF_002",
+            "type": "performance",
+            "severity": "medium",
+            "description": "Inefficient database query in list_items()",
+            "location": "services.py:120",
+            "remedy": "Add indexing and optimize query",
+            "remediated": true
+          },
+          {
+            "defect_id": "DEF_003",
+            "type": "code_quality",
+            "severity": "low",
+            "description": "Unused import in utils.py",
+            "location": "utils.py:5",
+            "remedy": "Remove unused import",
+            "remediated": true
+          }
+        ],
+        "generated_at": "2026-02-12T21:52:55.314750"
+      }
+    },
+    "phase_6": {
+      "phase_number": 6,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.321100",
+      "data": {
+        "status": "completed",
+        "deployment_id": "dep_d33c1adb",
+        "cloud_provider": "aws",
+        "endpoint": "https://TestProject.cloud/api",
+        "status_url": "https://console.aws.com/deployment/dep_d33c1adb",
+        "configuration": {
+          "provider": "aws",
+          "environment": "production",
+          "region": "us-east-1",
+          "instance_type": "t3.medium",
+          "auto_scaling": true,
+          "replicas": 3
+        },
+        "deployed_at": "2026-02-12T21:52:55.318751"
+      }
+    },
+    "phase_7": {
+      "phase_number": 7,
+      "status": "completed",
+      "completed_at": "2026-02-12T21:52:55.324858",
+      "data": {
+        "status": "completed",
+        "health": "healthy",
+        "uptime": "99.9%",
+        "response_time": "120ms",
+        "error_rate": "0.01%",
+        "active_users": 245,
+        "requests_per_second": 1200,
+        "cpu_usage": 42.5,
+        "memory_usage": 58.3,
+        "database_latency": "45ms",
+        "alerts": [],
+        "last_updated": "2026-02-12T21:52:55.322753"
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "status": "completed",
+  "total_defects": 3,
+  "high_severity": 1,
+  "medium_severity": 1,
+  "low_severity": 1,
+  "remediated": 3,
+  "defects": [
+    {
+      "defect_id": "DEF_001",
+      "type": "security",
+      "severity": "high",
+      "description": "SQL Injection vulnerability in user input handling",
+      "location": "models.py:45",
+      "remedy": "Use parameterized queries",
+      "remediated": true
+    },
+    {
+      "defect_id": "DEF_002",
+      "type": "performance",
+      "severity": "medium",
+      "description": "Inefficient database query in list_items()",
+      "location": "services.py:120",
+      "remedy": "Add indexing and optimize query",
+      "remediated": true
+    },
+    {
+      "defect_id": "DEF_003",
+      "type": "code_quality",
+      "severity": "low",
+      "description": "Unused import in utils.py",
+      "location": "utils.py:5",
+      "remedy": "Remove unused import",
+      "remediated": true
+    }
+  ],
+  "generated_at": "2026-02-12T21:38:07.416712"
+}

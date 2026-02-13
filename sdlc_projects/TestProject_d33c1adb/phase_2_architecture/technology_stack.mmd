@@ -1,0 +1,28 @@
+graph TB
+    subgraph Frontend["Frontend - User Interface"]
+        Flask["Flask Web Framework"]
+        JavaScript["JavaScript/Mermaid.js"]
+    end
+    subgraph Backend["Backend - Processing"]
+        Embeddings["Sentence Transformers"]
+        LLM["LangChain/GPT-4"]
+        RAG["RAG Pipeline"]
+    end
+    subgraph DataLayers["Data Layers"]
+        VectorDB["Vector Database<br/>Faiss/Pinecone"]
+        MongoDB["MongoDB<br/>Project Storage"]
+    end
+    subgraph MLModels["ML Models"]
+        DefectModel["Defect Prediction"]
+        CodeGen["Code Generation Model"]
+    end
+    subgraph Cloud["Cloud Deployment"]
+        AWS["AWS/GCP/Azure"]
+        CI_CD["CI/CD Pipeline"]
+    end
+    
+    Frontend --> Backend
+    Backend --> DataLayers
+    Backend --> MLModels
+    DataLayers --> Cloud
+    MLModels --> Cloud

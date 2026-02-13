@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Enabled SDLC Framework - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <i class="fas fa-robot"></i>
+                <span>AI SDLC Framework</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="/" class="nav-link active">Dashboard</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#upload" class="nav-link">New Project</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Cloud-Enabled AI SDLC Framework</h1>
+            <p>Automated Software Development Lifecycle Optimization</p>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-project-diagram"></i>
+                    <div class="stat-content">
+                        <h3 id="stat-projects">{{ total_projects }}</h3>
+                        <p>Projects</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle"></i>
+                    <div class="stat-content">
+                        <h3 id="stat-phases">0</h3>
+                        <p>Phases Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-cloud"></i>
+                    <div class="stat-content">
+                        <h3>7</h3>
+                        <p>SDLC Phases</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- main content -->
+    <main class="container">
+        <!-- Projects Section -->
+        <section id="projects" class="projects-section">
+            <div class="section-header">
+                <h2>Projects</h2>
+                <button class="btn btn-primary" onclick="showNewProjectModal()">
+                    <i class="fas fa-plus"></i> New Project
+                </button>
+            </div>
+
+            <div id="projects-list" class="projects-grid">
+                {% if projects %}
+                    {% for project in projects %}
+                    <div class="project-card">
+                        <div class="project-header">
+                            <h3>{{ project.name }}</h3>
+                            <span class="project-id">{{ project.id }}</span>
+                        </div>
+                        <div class="project-info">
+                            <p><strong>Created:</strong> {{ project.created_at[:10] }}</p>
+                            <p><strong>Phases:</strong> <span class="badge">{{ project.phase_count }}/7</span></p>
+                        </div>
+                        <div class="project-actions">
+                            <a href="/project/{{ project.id }}" class="btn btn-small btn-primary">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            <button class="btn btn-small btn-secondary" onclick="downloadProject('{{ project.id }}')">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="deleteProject('{{ project.id }}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <p>No projects yet. Create your first project to get started!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- SDLC Phases Overview -->
+        <section class="sdlc-phases-section">
+            <h2>SDLC Phases Overview</h2>
+            <div class="phases-timeline">
+                <div class="phase-item">
+                    <div class="phase-number">1</div>
+                    <div class="phase-info">
+                        <h4>Requirements Analysis</h4>
+                        <p>Extract and embed SRS documents</p>
+                    </div>
+                </div>
+                <div class="phase-item">
+                    <div class="phase-number">2</div>
+                    <div class="phase-info">
+                        <h4>Architecture Design</h4>
+                        <p>Generate system diagrams</p>
+                    </div>
+                </div>
+                <div class="phase-item">
+                    <div class="phase-number">3</div>
+                    <div class="phase-info">
+                        <h4>Code Generation</h4>
+                        <p>Generate code from requirements</p>
+                    </div>
+                </div>
+                <div class="phase-item">
+                    <div class="phase-number">4</div>
+                    <div class="phase-info">
+                        <h4>Testing</h4>
+                        <p>Execute unit and integration tests</p>
+                    </div>
+                </div>
+                <div class="phase-item">
+                    <div class="phase-number">5</div>
+                    <div class="phase-info">
+                        <h4>Defect Analysis</h4>
+                        <p>Identify and remediate defects</p>
+                    </div>
+                </div>
+                <div class="phase-item">
+                    <div class="phase-number">6</div>
+                    <div class="phase-info">
+                        <h4>Cloud Deployment</h4>
+                        <p>Deploy to cloud platform</p>
+                    </div>
+                </div>
+                <div class="phase-item">
+                    <div class="phase-number">7</div>
+                    <div class="phase-info">
+                        <h4>Maintenance</h4>
+                        <p>Monitor and maintain</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- New Project Modal -->
+    <div id="projectModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Create New SDLC Project</h2>
+            <form id="projectForm" onsubmit="submitProject(event)">
+                <div class="form-group">
+                    <label for="projectName">Project Name:</label>
+                    <input type="text" id="projectName" required>
+                </div>
+                <div class="form-group">
+                    <label for="srsText">SRS Text / Requirements:</label>
+                    <textarea id="srsText" rows="6" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="srsFile">Or Upload SRS File:</label>
+                    <input type="file" id="srsFile">
+                </div>
+                <button type="submit" class="btn btn-primary">Start SDLC Workflow</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 AI-Enabled SDLC Framework. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function showNewProjectModal() {
+            document.getElementById('projectModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').style.display = 'none';
+        }
+
+        async function submitProject(event) {
+            event.preventDefault();
+            
+            const projectName = document.getElementById('projectName').value;
+            const srsText = document.getElementById('srsText').value;
+            const btn = event.target.querySelector('button[type="submit"]');
+            const originalBtnText = btn.innerHTML;
+            
+            // Validate inputs
+            if (!projectName.trim() || !srsText.trim()) {
+                alert('Please fill in both project name and SRS text');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                
+                const response = await fetch('/api/execute-sdlc', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        project_name: projectName,
+                        srs_text: srsText,
+                        srs_chunks: [srsText]
+                    })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Server error');
+                }
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    closeModal();
+                    // Auto-redirect to project dashboard
+                    setTimeout(() => {
+                        window.location.href = `/project/${data.project_id}`;
+                    }, 1000);
+                } else {
+                    throw new Error(data.message || 'Unknown error occurred');
+                }
+            } catch (error) {
+                alert('Error creating project: ' + error.message);
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
+            }
+        }
+
+        async function downloadProject(projectId) {
+            window.location.href = `/api/project/${projectId}/export`;
+        }
+
+        async function deleteProject(projectId) {
+            if (confirm('Are you sure you want to delete this project?')) {
+                try {
+                    const response = await fetch(`/api/project/${projectId}/delete`, {
+                        method: 'POST'
+                    });
+                    
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Error deleting project: ' + error.message);
+                }
+            }
+        }
+
+        // Load stats on page load
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                document.getElementById('stat-phases').textContent = data.total_phases_completed;
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        window.addEventListener('load', loadStats);
+    </script>
+</body>
+</html>

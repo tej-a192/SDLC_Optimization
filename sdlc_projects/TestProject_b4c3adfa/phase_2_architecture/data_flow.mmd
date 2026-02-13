@@ -1,0 +1,12 @@
+graph LR
+    A["SRS Document"] -->|Extract Text| B["Text Preprocessing"]
+    B -->|Chunk| C["Embedding Generation"]
+    C -->|Semantic Search| D["GitHub Code Search"]
+    A -->|Parse Requirements| E["Requirement Extraction"]
+    E -->|Input| F["Code Generator"]
+    D -->|Code Sample| F
+    F -->|Generated Code| G["Code Analyzer"]
+    G -->|Test| H["Testing Module"]
+    H -->|Results| I["Defect Detector"]
+    I -->|Metrics| J["Quality Dashboard"]
+    J -->|Deploy| K["Cloud Platform"]

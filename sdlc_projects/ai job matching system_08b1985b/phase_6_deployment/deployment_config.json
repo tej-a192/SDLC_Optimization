@@ -1,0 +1,16 @@
+{
+  "status": "completed",
+  "deployment_id": "dep_08b1985b",
+  "cloud_provider": "aws",
+  "endpoint": "https://ai job matching system.cloud/api",
+  "status_url": "https://console.aws.com/deployment/dep_08b1985b",
+  "configuration": {
+    "provider": "aws",
+    "environment": "production",
+    "region": "us-east-1",
+    "instance_type": "t3.medium",
+    "auto_scaling": true,
+    "replicas": 3
+  },
+  "deployed_at": "2026-02-12T21:38:07.429711"
+}

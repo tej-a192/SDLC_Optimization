@@ -1,0 +1,9 @@
+graph LR
+    A["User Input"] -->|REST API| B["API Gateway"]
+    B -->|Auth Token| C["Authentication Layer"]
+    C -->|Validated Request| D["Business Logic"]
+    D -->|Read/Write| E["Database"]
+    D -->|Cache Check| F["Redis Cache"]
+    D -->|Full Text| G["Elasticsearch"]
+    E -->|Query Results| H["Response Formatter"]
+    H -->|JSON Response| I["Client"]

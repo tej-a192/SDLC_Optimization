@@ -1,0 +1,21 @@
+graph TB
+    Client["Mobile/Web Client"]
+    CDN["CDN - CloudFlare"]
+    LB["Load Balancer"]
+    AG["API Gateway"]
+    Auth["Auth Service - OAuth2"]
+    Core["Core Application Service"]
+    Cache["Redis Cache Layer"]
+    DB["PostgreSQL Database"]
+    Search["Elasticsearch"]
+    Queue["Message Queue - RabbitMQ"]
+    
+    Client -->|Static Assets| CDN
+    Client -->|API Calls| LB
+    LB --> AG
+    AG --> Auth
+    AG --> Core
+    Core --> Cache
+    Core --> DB
+    Core --> Search
+    Core --> Queue
