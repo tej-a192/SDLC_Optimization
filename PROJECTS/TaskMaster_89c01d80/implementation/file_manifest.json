@@ -1,0 +1,311 @@
+{
+  "folder_structure": {
+    "backend": {
+      "root_files": [
+        {
+          "path": "requirements.txt",
+          "description": "Python dependencies for FastAPI backend"
+        },
+        {
+          "path": ".env.example",
+          "description": "Environment variables template"
+        },
+        {
+          "path": "alembic.ini",
+          "description": "Alembic migration configuration"
+        },
+        {
+          "path": "main.py",
+          "description": "FastAPI application entry point"
+        }
+      ],
+      "directories": {
+        "app/api/v1/endpoints": [
+          {
+            "path": "app/api/v1/endpoints/auth.py",
+            "description": "Authentication endpoints (signup, login, reset password)"
+          },
+          {
+            "path": "app/api/v1/endpoints/tasks.py",
+            "description": "Task CRUD endpoints"
+          },
+          {
+            "path": "app/api/v1/endpoints/tags.py",
+            "description": "Tag management endpoints"
+          }
+        ],
+        "app/models": [
+          {
+            "path": "app/models/user.py",
+            "description": "User SQLAlchemy model"
+          },
+          {
+            "path": "app/models/task.py",
+            "description": "Task SQLAlchemy model"
+          },
+          {
+            "path": "app/models/tag.py",
+            "description": "Tag SQLAlchemy model"
+          }
+        ],
+        "app/schemas": [
+          {
+            "path": "app/schemas/user.py",
+            "description": "Pydantic schemas for user operations"
+          },
+          {
+            "path": "app/schemas/task.py",
+            "description": "Pydantic schemas for task operations"
+          },
+          {
+            "path": "app/schemas/tag.py",
+            "description": "Pydantic schemas for tag operations"
+          }
+        ],
+        "app/services": [
+          {
+            "path": "app/services/auth_service.py",
+            "description": "Authentication business logic"
+          },
+          {
+            "path": "app/services/task_service.py",
+            "description": "Task management business logic"
+          },
+          {
+            "path": "app/services/tag_service.py",
+            "description": "Tag management business logic"
+          },
+          {
+            "path": "app/services/notification_service.py",
+            "description": "Notification sending logic"
+          }
+        ],
+        "app/core": [
+          {
+            "path": "app/core/config.py",
+            "description": "Application configuration settings"
+          },
+          {
+            "path": "app/core/security.py",
+            "description": "Security utilities (password hashing, JWT)"
+          },
+          {
+            "path": "app/core/database.py",
+            "description": "Database connection setup"
+          }
+        ],
+        "app/middleware": [
+          {
+            "path": "app/middleware/auth_middleware.py",
+            "description": "Authentication middleware"
+          },
+          {
+            "path": "app/middleware/error_handler.py",
+            "description": "Global error handling middleware"
+          }
+        ],
+        "alembic/versions": [
+          {
+            "path": "alembic/versions/__init__.py",
+            "description": "Alembic versions package init"
+          }
+        ],
+        "alembic/env.py": [
+          {
+            "path": "alembic/env.py",
+            "description": "Alembic environment configuration"
+          }
+        ]
+      }
+    },
+    "frontend": {
+      "root_files": [
+        {
+          "path": "package.json",
+          "description": "React dependencies and scripts"
+        },
+        {
+          "path": "vite.config.js",
+          "description": "Vite build configuration"
+        },
+        {
+          "path": "tailwind.config.js",
+          "description": "Tailwind CSS configuration"
+        },
+        {
+          "path": "index.html",
+          "description": "Main HTML template"
+        }
+      ],
+      "directories": {
+        "src/components": [
+          {
+            "path": "src/components/layout/Header.jsx",
+            "description": "Application header component"
+          },
+          {
+            "path": "src/components/layout/Footer.jsx",
+            "description": "Application footer component"
+          },
+          {
+            "path": "src/components/tasks/TaskForm.jsx",
+            "description": "Task creation/editing form"
+          },
+          {
+            "path": "src/components/tasks/TaskList.jsx",
+            "description": "Display list of tasks"
+          },
+          {
+            "path": "src/components/tasks/TaskItem.jsx",
+            "description": "Individual task display component"
+          },
+          {
+            "path": "src/components/ui/Button.jsx",
+            "description": "Reusable button component"
+          },
+          {
+            "path": "src/components/ui/Input.jsx",
+            "description": "Reusable input component"
+          },
+          {
+            "path": "src/components/ui/Select.jsx",
+            "description": "Reusable select dropdown component"
+          }
+        ],
+        "src/pages": [
+          {
+            "path": "src/pages/Home.jsx",
+            "description": "Dashboard/home page"
+          },
+          {
+            "path": "src/pages/Login.jsx",
+            "description": "User login page"
+          },
+          {
+            "path": "src/pages/Signup.jsx",
+            "description": "User registration page"
+          },
+          {
+            "path": "src/pages/Profile.jsx",
+            "description": "User profile management page"
+          },
+          {
+            "path": "src/pages/Tasks.jsx",
+            "description": "Main tasks view page"
+          }
+        ],
+        "src/hooks": [
+          {
+            "path": "src/hooks/useAuth.js",
+            "description": "Authentication state hook"
+          },
+          {
+            "path": "src/hooks/useTasks.js",
+            "description": "Task data fetching/manipulation hook"
+          }
+        ],
+        "src/services": [
+          {
+            "path": "src/services/api.js",
+            "description": "Axios instance with base configuration"
+          },
+          {
+            "path": "src/services/authService.js",
+            "description": "Authentication API service"
+          },
+          {
+            "path": "src/services/taskService.js",
+            "description": "Task API service"
+          }
+        ],
+        "src/context": [
+          {
+            "path": "src/context/AuthContext.jsx",
+            "description": "Authentication context provider"
+          }
+        ],
+        "src/utils": [
+          {
+            "path": "src/utils/helpers.js",
+            "description": "General utility functions"
+          },
+          {
+            "path": "src/utils/formatters.js",
+            "description": "Date and text formatting utilities"
+          }
+        ],
+        "src/styles": [
+          {
+            "path": "src/styles/globals.css",
+            "description": "Global CSS styles"
+          },
+          {
+            "path": "src/styles/theme.js",
+            "description": "Theme configuration"
+          }
+        ],
+        "src/types": [
+          {
+            "path": "src/types/index.js",
+            "description": "JavaScript type definitions"
+          }
+        ]
+      }
+    }
+  },
+  "total_files": 52,
+  "files": [
+    "backend/requirements.txt",
+    "backend/.env.example",
+    "backend/alembic.ini",
+    "backend/main.py",
+    "backend/app/api/v1/endpoints/auth.py",
+    "backend/app/api/v1/endpoints/tasks.py",
+    "backend/app/api/v1/endpoints/tags.py",
+    "backend/app/models/user.py",
+    "backend/app/models/task.py",
+    "backend/app/models/tag.py",
+    "backend/app/schemas/user.py",
+    "backend/app/schemas/task.py",
+    "backend/app/schemas/tag.py",
+    "backend/app/services/auth_service.py",
+    "backend/app/services/task_service.py",
+    "backend/app/services/tag_service.py",
+    "backend/app/services/notification_service.py",
+    "backend/app/core/config.py",
+    "backend/app/core/security.py",
+    "backend/app/core/database.py",
+    "backend/app/middleware/auth_middleware.py",
+    "backend/app/middleware/error_handler.py",
+    "backend/alembic/versions/__init__.py",
+    "backend/alembic/env.py",
+    "frontend/package.json",
+    "frontend/vite.config.js",
+    "frontend/tailwind.config.js",
+    "frontend/index.html",
+    "frontend/src/components/layout/Header.jsx",
+    "frontend/src/components/layout/Footer.jsx",
+    "frontend/src/components/tasks/TaskForm.jsx",
+    "frontend/src/components/tasks/TaskList.jsx",
+    "frontend/src/components/tasks/TaskItem.jsx",
+    "frontend/src/components/ui/Button.jsx",
+    "frontend/src/components/ui/Input.jsx",
+    "frontend/src/components/ui/Select.jsx",
+    "frontend/src/pages/Home.jsx",
+    "frontend/src/pages/Login.jsx",
+    "frontend/src/pages/Signup.jsx",
+    "frontend/src/pages/Profile.jsx",
+    "frontend/src/pages/Tasks.jsx",
+    "frontend/src/hooks/useAuth.js",
+    "frontend/src/hooks/useTasks.js",
+    "frontend/src/services/api.js",
+    "frontend/src/services/authService.js",
+    "frontend/src/services/taskService.js",
+    "frontend/src/context/AuthContext.jsx",
+    "frontend/src/utils/helpers.js",
+    "frontend/src/utils/formatters.js",
+    "frontend/src/styles/globals.css",
+    "frontend/src/styles/theme.js",
+    "frontend/src/types/index.js"
+  ]
+}

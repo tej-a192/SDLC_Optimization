@@ -1,6 +1,7 @@
 """
 SDLC Optimization - API Routes
 Defines all endpoints for the SDLC pipeline.
+Now uses the Main Orchestrator for LLM-powered project generation.
 """
 
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
@@ -16,13 +17,9 @@ from models.schemas import (
     ProjectResponse,
     PhaseStatusResponse,
 )
-from core_engines.requirement_analysis.engine import RequirementAnalysisEngine
-from core_engines.design.engine import DesignEngine
-from core_engines.implementation.engine import ImplementationEngine
-from core_engines.testing.engine import TestingEngine
-from core_engines.deployment.engine import DeploymentEngine
 from rag_service.pipeline import RAGPipeline
 from services.llm_service import LLMService
+from orchestrator.main_orchestrator import MainOrchestrator
 
 router = APIRouter()
 
@@ -61,7 +58,7 @@ async def create_project(
     Create a new project by providing an SRS document (PDF upload or raw text).
     Select the LLM provider: "openai", "gemini", or "ollama".
     For Ollama, provide the URL where it is running.
-    Triggers the full SDLC pipeline: RA -> Design -> Implementation -> Testing -> Deployment
+    Triggers the full SDLC pipeline via the Main Orchestrator.
     """
     if not srs_text and not srs_file:
         raise HTTPException(
@@ -69,7 +66,7 @@ async def create_project(
             detail="Please provide either SRS text or upload an SRS PDF file.",
         )
 
-    # Initialize the LLM service with the selected provider
+    # Initialize the LLM service with the selected provider and key rotation
     llm = LLMService(
         provider=llm_provider,
         ollama_url=ollama_url or settings.ollama_url,
@@ -84,50 +81,27 @@ async def create_project(
     raw_srs_text = srs_text or ""
     if srs_file:
         from utils.pdf_reader import extract_text_from_pdf
-
         pdf_bytes = await srs_file.read()
         raw_srs_text = extract_text_from_pdf(pdf_bytes)
 
-    # Initialize project metadata
+    # ── RAG Pipeline: chunk + embed the SRS ──
+    rag = RAGPipeline()
+    rag_context = rag.process_document(raw_srs_text)
+
+    # ── Run the Main Orchestrator (all 5 phases with LLM) ──
+    orchestrator = MainOrchestrator(llm, project_dir)
+    phases_result = orchestrator.run(raw_srs_text, rag_context)
+
+    # Build and save project metadata
     metadata = {
         "project_name": project_name,
         "project_id": project_id,
         "created_at": datetime.now().isoformat(),
         "srs_input_method": "pdf" if srs_file else "text",
         "llm_provider": llm_provider,
-        "phases": {},
+        "phases": phases_result,
     }
 
-    # ── RAG Pipeline: chunk + embed the SRS ──
-    rag = RAGPipeline()
-    rag_context = rag.process_document(raw_srs_text)
-
-    # ── Phase 1: Requirement Analysis ──
-    ra_engine = RequirementAnalysisEngine(project_dir)
-    ra_result = ra_engine.execute(raw_srs_text, rag_context)
-    metadata["phases"]["requirement_analysis"] = ra_result
-
-    # ── Phase 2: Design ──
-    design_engine = DesignEngine(project_dir)
-    design_result = design_engine.execute(ra_result, rag_context)
-    metadata["phases"]["design"] = design_result
-
-    # ── Phase 3: Implementation ──
-    impl_engine = ImplementationEngine(project_dir)
-    impl_result = impl_engine.execute(ra_result, design_result, rag_context)
-    metadata["phases"]["implementation"] = impl_result
-
-    # ── Phase 4: Testing ──
-    test_engine = TestingEngine(project_dir)
-    test_result = test_engine.execute(impl_result)
-    metadata["phases"]["testing"] = test_result
-
-    # ── Phase 5: Deployment ──
-    deploy_engine = DeploymentEngine(project_dir)
-    deploy_result = deploy_engine.execute(impl_result)
-    metadata["phases"]["deployment"] = deploy_result
-
-    # Save project metadata
     metadata_path = os.path.join(project_dir, "project_metadata.json")
     with open(metadata_path, "w") as f:
         json.dump(metadata, f, indent=2, default=str)
@@ -136,7 +110,7 @@ async def create_project(
         project_name=project_name,
         project_id=project_id,
         project_dir=project_dir,
-        phases=metadata["phases"],
+        phases=phases_result,
         status="completed",
     )
 
@@ -162,6 +136,8 @@ async def delete_project(project_id: str):
     projects_dir = settings.projects_dir
     for name in os.listdir(projects_dir):
         if project_id in name:
-            shutil.rmtree(os.path.join(projects_dir, name))
-            return {"message": f"Project {project_id} deleted successfully"}
+            project_path = os.path.join(projects_dir, name)
+            shutil.rmtree(project_path)
+            return {"message": f"Project {project_id} deleted successfully."}
+
     raise HTTPException(status_code=404, detail="Project not found")
