@@ -4,6 +4,8 @@ Coordinates all 5 SDLC phases in sequence, passing accumulated context between t
 """
 
 import time
+import os
+import shutil
 from typing import Dict, Any
 from datetime import datetime
 
@@ -47,6 +49,9 @@ class MainOrchestrator:
         phases_result["requirement_analysis"] = p1_result
         self.context["phase1_summary"] = p1_result.get("summary", {})
         print(f"  ✓ Phase 1 complete ({p1_result.get('llm_calls', 0)} LLM calls)")
+
+
+
 
         # ── Phase 2: Design ──
         print("\n[Phase 2/5] Design...")

@@ -1,11 +1,10 @@
-# test_pipeline.py
-import asyncio
-import json
-import httpx
+import os
+import uuid
+from config import settings
+from services.llm_service import LLMService
 
-API_URL = "http://127.0.0.1:8000/api/projects/create"
+from orchestrator.phase1_orchestrator import Phase1Orchestrator
 
-# Simple To-Do application SRS for faster testing
 SAMPLE_SRS = """
 # Software Requirements Specification (SRS)
 ## Project: TaskFlow - To-Do Application
@@ -74,44 +73,43 @@ TaskFlow is a web/mobile-based application that allows users to create tasks, se
 - AI-based task suggestions based on user habits.
 """
 
-async def test_create_project():
-    print("Starting e2e integration test...")
-    print(f"SRS length: {len(SAMPLE_SRS)} characters")
-    try:
-        # Timeout to 900s
-        async with httpx.AsyncClient(timeout=900.0) as client:
-            print(f"Sending request to {API_URL}...")
-            
-            data = {
-                "srs_text": SAMPLE_SRS,
-                "llm_provider": "ollama",
-            }
-            
-            response = await client.post(API_URL, data=data)
-            
-            print(f"\nStatus Code: {response.status_code}")
-            
-            if response.status_code == 200:
-                result = response.json()
-                print("✅ Project creation successful!")
-                print(f"Project ID: {result.get('project_id')}")
-                print(f"Project Dir: {result.get('project_dir')}")
-                print(f"\nPhases:")
-                phases = result.get("phases", {})
-                for phase_name, phase_data in phases.items():
-                    status = phase_data.get("status", "unknown")
-                    llm_calls = phase_data.get("llm_calls", 0)
-                    artifacts = phase_data.get("artifacts", [])
-                    print(f"  {phase_name}: {status} ({llm_calls} LLM calls, {len(artifacts)} artifacts)")
-            else:
-                print("❌ Project creation failed!")
-                print("Error Details:", response.text[:500])
-                
-    except httpx.ReadTimeout:
-        print("⏰ Request timed out (900s). The pipeline is still running on the server.")
-        print("Check the server logs for progress.")
-    except Exception as e:
-        print(f"❌ Exception occurred: {e}")
+def test_p1_and_rename():
+    # 1. Recreate the exact API setup conditions
+    project_id = str(uuid.uuid4())[:8]
+    old_dir_name = f"temp_project_{project_id}"
+    project_dir = os.path.join(settings.projects_dir, old_dir_name)
+    os.makedirs(project_dir, exist_ok=True)
+    
+    print(f"Created temporary directory: {old_dir_name}")
+    
+    # 2. Recreate LLM and Phase 1 Orchestrator
+    llm = LLMService(provider="ollama", ollama_url="http://localhost:11434")
+    p1 = Phase1Orchestrator(llm, project_dir)
+    
+    # 3. Execute Phase 1 exactly as the Main Orchestrator does
+    res = p1.execute(SAMPLE_SRS, {"chunks": []})
+    
+    print("\n--- PHASE 1 SUMMARY (Parsed JSON) ---")
+    print(res.get("summary", {}))
+    
+    # 4. Recreate the dynamic renaming logic exactly as it is in main_orchestrator.py
+    inferred_name = res.get("summary", {}).get("project_name")
+    
+    if inferred_name and "temp_project_" in project_dir:
+        parent_dir = os.path.dirname(project_dir)
+        uuid_part = os.path.basename(project_dir).split("_")[-1]
+        safe_name = "".join(c for c in inferred_name if c.isalnum() or c in (' ', '-', '_')).replace(' ', '_')
+        new_dir_name = f"{safe_name}_{uuid_part}"
+        new_project_dir = os.path.join(parent_dir, new_dir_name)
+        
+        try:
+            os.rename(project_dir, new_project_dir)
+            project_dir = new_project_dir
+            print(f"\n✅ SUCCESS: Dynamically renamed project folder to: {new_dir_name}")
+        except Exception as e:
+            print(f"\n❌ FAILED: Could not rename project directory: {e}")
+    else:
+        print("\n❌ FAILED: Did not trigger renaming logic (Inferred name is empty or temp_project not in dir)")
 
 if __name__ == "__main__":
-    asyncio.run(test_create_project())
+    test_p1_and_rename()

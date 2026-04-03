@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+.container {
+  @apply max-w-4xl mx-auto px-4 py-8;
+}
+
+.btn {
+  @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+}
+
+.btn-primary {
+  @apply btn bg-blue-600 hover:bg-blue-700 text-white;
+}
+
+.btn-secondary {
+  @apply btn bg-gray-200 hover:bg-gray-300 text-gray-800;
+}
+
+.btn-danger {
+  @apply btn bg-red-600 hover:bg-red-700 text-white;
+}
+
+.task-item {
+  @apply flex items-center justify-between p-4 mb-2 bg-white rounded-lg shadow-sm border border-gray-200;
+}
+
+.task-title {
+  @apply text-lg font-medium;
+}
+
+.task-description {
+  @apply text-gray-600 text-sm mt-1;
+}
+
+.completed .task-title {
+  @apply line-through text-gray-500;
+}
+
+.completed .task-description {
+  @apply line-through text-gray-400;
+}
+
+.form-input {
+  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+}
+
+.checkbox {
+  @apply h-5 w-5 text-blue-600 rounded focus:ring-blue-500;
+}

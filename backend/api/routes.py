@@ -9,7 +9,9 @@ from typing import Optional
 import os
 import uuid
 import json
+import shutil
 from datetime import datetime
+from fastapi.responses import FileResponse
 
 from config import settings
 from models.schemas import (
@@ -74,7 +76,8 @@ async def create_project(
 
     # Generate unique project ID
     project_id = str(uuid.uuid4())[:8]
-    project_dir = os.path.join(settings.projects_dir, f"{project_name}_{project_id}")
+    safe_name = "".join(c for c in project_name if c.isalnum() or c in (' ', '-', '_')).replace(' ', '_')
+    project_dir = os.path.join(settings.projects_dir, f"{safe_name}_{project_id}")
     os.makedirs(project_dir, exist_ok=True)
 
     # Extract text from PDF if uploaded
@@ -92,9 +95,13 @@ async def create_project(
     orchestrator = MainOrchestrator(llm, project_dir)
     phases_result = orchestrator.run(raw_srs_text, rag_context)
 
+    # Ensure the correct path and name are saved
+    project_dir = orchestrator.project_dir
+    final_project_name = project_name
+
     # Build and save project metadata
     metadata = {
-        "project_name": project_name,
+        "project_name": final_project_name,
         "project_id": project_id,
         "created_at": datetime.now().isoformat(),
         "srs_input_method": "pdf" if srs_file else "text",
@@ -107,7 +114,7 @@ async def create_project(
         json.dump(metadata, f, indent=2, default=str)
 
     return ProjectResponse(
-        project_name=project_name,
+        project_name=final_project_name,
         project_id=project_id,
         project_dir=project_dir,
         phases=phases_result,
@@ -139,5 +146,24 @@ async def delete_project(project_id: str):
             project_path = os.path.join(projects_dir, name)
             shutil.rmtree(project_path)
             return {"message": f"Project {project_id} deleted successfully."}
+
+    raise HTTPException(status_code=404, detail="Project not found")
+
+
+@router.get("/projects/{project_id}/download")
+async def download_project(project_id: str):
+    """Zip the generated project directory and return it for download."""
+    projects_dir = settings.projects_dir
+    for name in os.listdir(projects_dir):
+        if project_id in name:
+            project_path = os.path.join(projects_dir, name)
+            zip_path = os.path.join(settings.projects_dir, f"{name}.zip")
+            shutil.make_archive(zip_path.replace('.zip', ''), 'zip', project_path)
+            
+            return FileResponse(
+                path=zip_path, 
+                media_type="application/x-zip-compressed", 
+                filename=f"{name}.zip"
+            )
 
     raise HTTPException(status_code=404, detail="Project not found")

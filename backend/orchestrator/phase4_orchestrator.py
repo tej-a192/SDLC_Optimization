@@ -37,30 +37,35 @@ class Phase4Orchestrator:
 
         p1_summary = context.get("phase1_summary", {})
         p3_summary = context.get("phase3_summary", {})
-        file_manifest = p3_summary.get("file_manifest", {})
+        file_list = p3_summary.get("file_list", [])
 
         generated_tests = []
 
+        # Reconstruct file list with paths for the prompt
+        backend_files = [{"path": f, "description": ""} for f in file_list if f.startswith("backend/")]
+        frontend_files = [{"path": f, "description": ""} for f in file_list if f.startswith("frontend/")]
+
         # ── LLM Call 1: Backend tests ──
-        backend_files = file_manifest.get("backend", [])
         if backend_files:
             test_content = self._generate_backend_tests(p1_summary, backend_files)
-            write_text_file(self.output_dir, "test_backend.py", test_content)
-            generated_tests.append("test_backend.py")
+            if test_content:
+                write_text_file(self.output_dir, "test_backend.py", test_content)
+                generated_tests.append("test_backend.py")
 
         # ── LLM Call 2: Frontend tests ──
-        frontend_files = file_manifest.get("frontend", [])
         if frontend_files:
             test_content = self._generate_frontend_tests(p1_summary, frontend_files)
-            write_text_file(self.output_dir, "test_frontend.jsx", test_content)
-            generated_tests.append("test_frontend.jsx")
+            if test_content:
+                write_text_file(self.output_dir, "test_frontend.jsx", test_content)
+                generated_tests.append("test_frontend.jsx")
 
         # ── LLM Call 3 (conditional): API integration tests if 5+ endpoints ──
-        backend_route_files = [f for f in backend_files if "route" in f.get("path", "").lower()]
-        if len(p1_summary.get("functional_requirements", [])) >= 5:
+        backend_route_files = [f for f in backend_files if "route" in f.get("path", "").lower() or "endpoint" in f.get("path", "").lower()]
+        if len(p1_summary.get("functional_requirements", [])) >= 5 and backend_route_files:
             test_content = self._generate_api_integration_tests(p1_summary, backend_files)
-            write_text_file(self.output_dir, "test_api_integration.py", test_content)
-            generated_tests.append("test_api_integration.py")
+            if test_content:
+                write_text_file(self.output_dir, "test_api_integration.py", test_content)
+                generated_tests.append("test_api_integration.py")
 
         # Generate test config files
         pytest_ini = self._generate_pytest_config()

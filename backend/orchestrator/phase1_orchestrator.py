@@ -14,6 +14,7 @@ from typing import Dict, Any
 
 from services.llm_service import LLMService
 from utils.file_writer import write_text_file, write_json_file
+from utils.pdf_generator import convert_md_to_pdf
 
 
 SYSTEM_PROMPT = """You are an expert software requirements analyst.
@@ -53,12 +54,16 @@ class Phase1Orchestrator:
         # Save artifacts
         write_text_file(self.output_dir, "RA_Document.md", ra_document)
         write_json_file(self.output_dir, "analysis_metadata.json", analysis)
+        
+        # Also generate PDF version
+        pdf_path = os.path.join(self.output_dir, "RA_Document.pdf")
+        convert_md_to_pdf(ra_document, pdf_path)
 
         result = {
             "status": "completed",
             "phase": "requirement_analysis",
             "output_dir": self.output_dir,
-            "artifacts": ["RA_Document.md", "analysis_metadata.json"],
+            "artifacts": ["RA_Document.md", "RA_Document.pdf", "analysis_metadata.json"],
             "summary": analysis,
             "llm_calls": self.llm_calls,
             "completed_at": datetime.now().isoformat(),
@@ -106,15 +111,29 @@ IMPORTANT: Return ONLY the JSON object, no markdown fences, no explanation.
 
         response = self.llm.generate(prompt, system_prompt=SYSTEM_PROMPT, max_tokens=4000, model="kimi-k2-thinking:cloud")
 
+        print("""
+        =========================================
+        =========================================
+        RESPONSE FROM PHASE 1
+        =========================================
+        =========================================
+        """)
+        print(response)
+
+        
         # Parse JSON from LLM response
         try:
-            # Clean up response (remove markdown code fences if present)
-            cleaned = response.strip()
-            if cleaned.startswith("```"):
-                cleaned = cleaned.split("\n", 1)[1] if "\n" in cleaned else cleaned[3:]
-            if cleaned.endswith("```"):
-                cleaned = cleaned[:-3]
-            cleaned = cleaned.strip()
+            import re
+            # Aggressively remove reasoning model 'think' blocks to prevent curly brace interference
+            clean_text = re.sub(r'<think>.*?</think>', '', response, flags=re.DOTALL)
+
+            # Clean up response (extract only the JSON object between {} avoiding <think> tags)
+            start_idx = clean_text.find('{')
+            end_idx = clean_text.rfind('}')
+            if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+                cleaned = clean_text[start_idx:end_idx+1]
+            else:
+                cleaned = clean_text.strip()
 
             analysis = json.loads(cleaned)
         except json.JSONDecodeError:

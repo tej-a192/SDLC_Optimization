@@ -108,6 +108,26 @@ body {
   }
 }
 
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-left-color: rgba(99, 102, 241, 0.4); }
+  50%       { border-left-color: rgba(99, 102, 241, 1); }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes progress-fill {
+  from { width: 0%; }
+  to   { width: var(--fill-width, 0%); }
+}
+
 @keyframes shimmer {
   0% {
     background-position: -200% 0;
@@ -126,6 +146,18 @@ body {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse-border {
+  animation: pulse-border 1.5s ease-in-out infinite;
+}
+
+.animate-count-up {
+  animation: count-up 0.4s ease-out forwards;
+}
+
 .shimmer {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
   background-size: 200% 100%;
@@ -133,22 +165,42 @@ body {
 }
 
 /* ── Staggered Delays ── */
-.delay-100 {
-  animation-delay: 100ms;
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+.delay-500 { animation-delay: 500ms; }
+.delay-600 { animation-delay: 600ms; }
+.delay-700 { animation-delay: 700ms; }
+.delay-800 { animation-delay: 800ms; }
+.delay-900 { animation-delay: 900ms; }
+.delay-1000 { animation-delay: 1000ms; }
+
+/* ── Metric Card ── */
+.metric-card {
+  background: var(--color-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow);
 }
 
-.delay-200 {
-  animation-delay: 200ms;
+/* ── Phase Row (Execution View) ── */
+.phase-row-running {
+  border-left: 3px solid var(--color-primary);
+  background: rgba(99, 102, 241, 0.07);
+  animation: pulse-border 1.5s ease-in-out infinite;
 }
-
-.delay-300 {
-  animation-delay: 300ms;
+.phase-row-done {
+  border-left: 3px solid var(--color-success);
 }
-
-.delay-400 {
-  animation-delay: 400ms;
-}
-
-.delay-500 {
-  animation-delay: 500ms;
+.phase-row-pending {
+  border-left: 3px solid transparent;
 }

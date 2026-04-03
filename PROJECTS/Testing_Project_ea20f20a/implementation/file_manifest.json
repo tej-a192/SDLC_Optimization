@@ -1,0 +1,215 @@
+{
+  "folder_structure": {
+    "backend": {
+      "root_files": [
+        {
+          "path": "package.json",
+          "description": "Node.js dependencies and scripts"
+        },
+        {
+          "path": "tsconfig.json",
+          "description": "TypeScript configuration"
+        },
+        {
+          "path": ".env.example",
+          "description": "Environment variables template"
+        },
+        {
+          "path": ".gitignore",
+          "description": "Git ignore rules"
+        }
+      ],
+      "directories": {
+        "src/config": [
+          {
+            "path": "src/config/database.ts",
+            "description": "Database connection config"
+          },
+          {
+            "path": "src/config/environment.ts",
+            "description": "Environment variable loader"
+          }
+        ],
+        "src/models": [
+          {
+            "path": "src/models/task.model.ts",
+            "description": "Task data model"
+          }
+        ],
+        "src/routes": [
+          {
+            "path": "src/routes/tasks.route.ts",
+            "description": "Task-related routes"
+          }
+        ],
+        "src/controllers": [
+          {
+            "path": "src/controllers/task.controller.ts",
+            "description": "Handles incoming requests for tasks"
+          }
+        ],
+        "src/services": [
+          {
+            "path": "src/services/task.service.ts",
+            "description": "Business logic for tasks"
+          }
+        ],
+        "src/middleware": [
+          {
+            "path": "src/middleware/errorHandler.middleware.ts",
+            "description": "Global error handling middleware"
+          },
+          {
+            "path": "src/middleware/validation.middleware.ts",
+            "description": "Request validation utilities"
+          }
+        ],
+        "src/utils": [
+          {
+            "path": "src/utils/response.util.ts",
+            "description": "Standardized API response formatter"
+          },
+          {
+            "path": "src/utils/logger.util.ts",
+            "description": "Logging utility"
+          }
+        ],
+        "src/types": [
+          {
+            "path": "src/types/task.types.ts",
+            "description": "TypeScript interfaces for Task entity"
+          }
+        ]
+      }
+    },
+    "frontend": {
+      "root_files": [
+        {
+          "path": "package.json",
+          "description": "Frontend dependencies and scripts"
+        },
+        {
+          "path": "vite.config.ts",
+          "description": "Vite build tool configuration"
+        },
+        {
+          "path": "tsconfig.json",
+          "description": "TypeScript compiler options"
+        },
+        {
+          "path": "tailwind.config.js",
+          "description": "Tailwind CSS configuration"
+        },
+        {
+          "path": "index.html",
+          "description": "Main HTML entry point"
+        },
+        {
+          "path": ".gitignore",
+          "description": "Git ignore rules"
+        }
+      ],
+      "directories": {
+        "src/components": [
+          {
+            "path": "src/components/TaskItem.tsx",
+            "description": "Individual task display component"
+          },
+          {
+            "path": "src/components/AddTaskForm.tsx",
+            "description": "Form to create new tasks"
+          },
+          {
+            "path": "src/components/Header.tsx",
+            "description": "Application header/navigation"
+          }
+        ],
+        "src/pages": [
+          {
+            "path": "src/pages/HomePage.tsx",
+            "description": "Main dashboard showing all tasks"
+          }
+        ],
+        "src/hooks": [
+          {
+            "path": "src/hooks/useTasks.ts",
+            "description": "Custom hook for managing task state"
+          }
+        ],
+        "src/services": [
+          {
+            "path": "src/services/taskApi.service.ts",
+            "description": "API calls related to tasks"
+          }
+        ],
+        "src/context": [
+          {
+            "path": "src/context/TaskContext.tsx",
+            "description": "Global state management for tasks"
+          }
+        ],
+        "src/utils": [
+          {
+            "path": "src/utils/formatters.ts",
+            "description": "Utility functions for formatting data"
+          }
+        ],
+        "src/types": [
+          {
+            "path": "src/types/task.types.ts",
+            "description": "Shared TypeScript interfaces for Task"
+          }
+        ],
+        "src/styles": [
+          {
+            "path": "src/styles/globals.css",
+            "description": "Global styling including Tailwind imports"
+          }
+        ]
+      }
+    },
+    "database": {
+      "root_files": [
+        {
+          "path": "prisma/schema.prisma",
+          "description": "Prisma schema definition for database models"
+        }
+      ],
+      "directories": {}
+    }
+  },
+  "total_files": 31,
+  "files": [
+    "backend/package.json",
+    "backend/tsconfig.json",
+    "backend/.env.example",
+    "backend/.gitignore",
+    "backend/src/config/database.ts",
+    "backend/src/config/environment.ts",
+    "backend/src/models/task.model.ts",
+    "backend/src/routes/tasks.route.ts",
+    "backend/src/controllers/task.controller.ts",
+    "backend/src/services/task.service.ts",
+    "backend/src/middleware/errorHandler.middleware.ts",
+    "backend/src/middleware/validation.middleware.ts",
+    "backend/src/utils/response.util.ts",
+    "backend/src/utils/logger.util.ts",
+    "backend/src/types/task.types.ts",
+    "frontend/package.json",
+    "frontend/vite.config.ts",
+    "frontend/tsconfig.json",
+    "frontend/tailwind.config.js",
+    "frontend/index.html",
+    "frontend/.gitignore",
+    "frontend/src/components/TaskItem.tsx",
+    "frontend/src/components/AddTaskForm.tsx",
+    "frontend/src/components/Header.tsx",
+    "frontend/src/pages/HomePage.tsx",
+    "frontend/src/hooks/useTasks.ts",
+    "frontend/src/services/taskApi.service.ts",
+    "frontend/src/context/TaskContext.tsx",
+    "frontend/src/utils/formatters.ts",
+    "frontend/src/types/task.types.ts",
+    "frontend/src/styles/globals.css"
+  ]
+}

@@ -1,0 +1,396 @@
+{
+  "project_name": "Testing_Project",
+  "project_id": "ea20f20a",
+  "created_at": "2026-04-03T20:07:30.971402",
+  "srs_input_method": "text",
+  "llm_provider": "ollama",
+  "phases": {
+    "requirement_analysis": {
+      "status": "completed",
+      "phase": "requirement_analysis",
+      "output_dir": "../PROJECTS\\Testing_Project_ea20f20a\\requirement_analysis",
+      "artifacts": [
+        "RA_Document.md",
+        "RA_Document.pdf",
+        "analysis_metadata.json"
+      ],
+      "summary": {
+        "project_name": "To-Do Application",
+        "project_description": "A simple to-do application for mobile or web platforms that allows users to manage tasks. Users can add, view, complete, and delete tasks. The app emphasizes simplicity with a basic UI and no advanced features.",
+        "functional_requirements": [
+          "FR1: User can add a task",
+          "FR2: User can view tasks",
+          "FR3: User can mark task as complete",
+          "FR4: User can delete a task"
+        ],
+        "non_functional_requirements": [
+          "NFR1: App should load quickly",
+          "NFR2: Data should be stored safely"
+        ],
+        "user_roles": [
+          "General User"
+        ],
+        "entities": [
+          "Task"
+        ],
+        "tech_stack_hints": {
+          "frontend": "",
+          "backend": "",
+          "database": ""
+        },
+        "constraints": [
+          "Simple UI",
+          "No advanced features"
+        ],
+        "complexity_estimate": "Low",
+        "total_functional_requirements": 4,
+        "total_non_functional_requirements": 2,
+        "analyzed_at": "2026-04-03T19:42:56.949417",
+        "total_chunks": 2
+      },
+      "llm_calls": 2,
+      "completed_at": "2026-04-03T19:44:39.208654"
+    },
+    "design": {
+      "status": "completed",
+      "phase": "design",
+      "output_dir": "../PROJECTS\\Testing_Project_ea20f20a\\design",
+      "artifacts": [
+        "Design_Document.md",
+        "Design_Document.pdf",
+        "design_metadata.json"
+      ],
+      "summary": {
+        "project_name": "To-Do Application",
+        "entities": [
+          "Task"
+        ],
+        "user_roles": [
+          "General User"
+        ],
+        "tech_stack": {
+          "frontend": "",
+          "backend": "",
+          "database": ""
+        },
+        "functional_requirements": [
+          "FR1: User can add a task",
+          "FR2: User can view tasks",
+          "FR3: User can mark task as complete",
+          "FR4: User can delete a task"
+        ],
+        "non_functional_requirements": [
+          "NFR1: App should load quickly",
+          "NFR2: Data should be stored safely"
+        ],
+        "architecture_snippet": "# To-Do Application Architecture\n\n## 1. System Overview\n\nFor this simple to-do application, I recommend a **monolithic architecture** with a **client-server model**. This approach is ideal because:\n\n- The application is small with limited scope\n- Monoliths are simpler to develop, deploy, and maintain for small projects\n- No need for complex inter-service communication\n- Easier to ensure data consistency\n- Lower operational overhead\n\nThe system will follow a **three-tier architecture**:\n1. **Presentation Layer** (Frontend)\n2. **Application Layer** (Backend)\n3. **Data Layer** (Database)\n\nWe'll implement **clean architecture principles** within the monolith to ensure separation of concerns and maintainability.\n\n## 2. Technology Stack\n\n### Frontend\n- **Framework**: React.js (for web) or React Native (for mobile)\n  - *Rationale*: Popular, component-based, excellent ecosystem, good performance\n- **State Management**: React Context API or Redux (if complexity grows)\n- **Styling**: CSS Modules",
+        "db_schema_snippet": "Here's a well-designed database schema for your To-Do application following modern best practices:\n\n```markdown\n# To-Do Application Database Schema\n\n## Entities\n\n### 1. User\nStores user account information (added for proper task ownership)\n\n| Column Name | Data Type       | Constraints               | Description                          |\n|-------------|-----------------|---------------------------|--------------------------------------|\n| id          | UUID            | PRIMARY KEY, NOT NULL     | Unique user identifier               |\n| email       | VARCHAR(255)    | UNIQUE, NOT NULL          | User's email address (login)         |\n| password    | VARCHAR(255)    | NOT NULL                  | Hashed password                      |\n| name        | VARCHAR(100)    |                           | User's display name                  |\n| created_at  | TIMESTAMPTZ     | NOT NULL, DEFAULT NOW()   | When user account was created        |\n| updated_at  | TIMESTAMPTZ     | NOT NULL, DEFAULT ",
+        "designed_at": "2026-04-03T19:47:09.583526"
+      },
+      "llm_calls": 4,
+      "completed_at": "2026-04-03T19:47:25.782777"
+    },
+    "implementation": {
+      "status": "completed",
+      "phase": "implementation",
+      "output_dir": "../PROJECTS\\Testing_Project_ea20f20a\\implementation",
+      "artifacts": [
+        "backend/package.json",
+        "backend/tsconfig.json",
+        "backend/.env.example",
+        "backend/.gitignore",
+        "backend/src/config/database.ts",
+        "backend/src/config/environment.ts",
+        "backend/src/models/task.model.ts",
+        "backend/src/routes/tasks.route.ts",
+        "backend/src/controllers/task.controller.ts",
+        "backend/src/services/task.service.ts",
+        "backend/src/middleware/errorHandler.middleware.ts",
+        "backend/src/middleware/validation.middleware.ts",
+        "backend/src/utils/response.util.ts",
+        "backend/src/utils/logger.util.ts",
+        "backend/src/types/task.types.ts",
+        "frontend/package.json",
+        "frontend/vite.config.ts",
+        "frontend/tsconfig.json",
+        "frontend/tailwind.config.js",
+        "frontend/index.html",
+        "frontend/.gitignore",
+        "frontend/src/components/TaskItem.tsx",
+        "frontend/src/components/AddTaskForm.tsx",
+        "frontend/src/components/Header.tsx",
+        "frontend/src/pages/HomePage.tsx",
+        "frontend/src/hooks/useTasks.ts",
+        "frontend/src/services/taskApi.service.ts",
+        "frontend/src/context/TaskContext.tsx",
+        "frontend/src/utils/formatters.ts",
+        "frontend/src/types/task.types.ts",
+        "frontend/src/styles/globals.css",
+        "file_manifest.json",
+        "IMPLEMENTATION_GUIDE.md"
+      ],
+      "summary": {
+        "total_files": 31,
+        "file_list": [
+          "backend/package.json",
+          "backend/tsconfig.json",
+          "backend/.env.example",
+          "backend/.gitignore",
+          "backend/src/config/database.ts",
+          "backend/src/config/environment.ts",
+          "backend/src/models/task.model.ts",
+          "backend/src/routes/tasks.route.ts",
+          "backend/src/controllers/task.controller.ts",
+          "backend/src/services/task.service.ts",
+          "backend/src/middleware/errorHandler.middleware.ts",
+          "backend/src/middleware/validation.middleware.ts",
+          "backend/src/utils/response.util.ts",
+          "backend/src/utils/logger.util.ts",
+          "backend/src/types/task.types.ts",
+          "frontend/package.json",
+          "frontend/vite.config.ts",
+          "frontend/tsconfig.json",
+          "frontend/tailwind.config.js",
+          "frontend/index.html",
+          "frontend/.gitignore",
+          "frontend/src/components/TaskItem.tsx",
+          "frontend/src/components/AddTaskForm.tsx",
+          "frontend/src/components/Header.tsx",
+          "frontend/src/pages/HomePage.tsx",
+          "frontend/src/hooks/useTasks.ts",
+          "frontend/src/services/taskApi.service.ts",
+          "frontend/src/context/TaskContext.tsx",
+          "frontend/src/utils/formatters.ts",
+          "frontend/src/types/task.types.ts",
+          "frontend/src/styles/globals.css"
+        ],
+        "folder_structure": {
+          "backend": {
+            "root_files": [
+              {
+                "path": "package.json",
+                "description": "Node.js dependencies and scripts"
+              },
+              {
+                "path": "tsconfig.json",
+                "description": "TypeScript configuration"
+              },
+              {
+                "path": ".env.example",
+                "description": "Environment variables template"
+              },
+              {
+                "path": ".gitignore",
+                "description": "Git ignore rules"
+              }
+            ],
+            "directories": {
+              "src/config": [
+                {
+                  "path": "src/config/database.ts",
+                  "description": "Database connection config"
+                },
+                {
+                  "path": "src/config/environment.ts",
+                  "description": "Environment variable loader"
+                }
+              ],
+              "src/models": [
+                {
+                  "path": "src/models/task.model.ts",
+                  "description": "Task data model"
+                }
+              ],
+              "src/routes": [
+                {
+                  "path": "src/routes/tasks.route.ts",
+                  "description": "Task-related routes"
+                }
+              ],
+              "src/controllers": [
+                {
+                  "path": "src/controllers/task.controller.ts",
+                  "description": "Handles incoming requests for tasks"
+                }
+              ],
+              "src/services": [
+                {
+                  "path": "src/services/task.service.ts",
+                  "description": "Business logic for tasks"
+                }
+              ],
+              "src/middleware": [
+                {
+                  "path": "src/middleware/errorHandler.middleware.ts",
+                  "description": "Global error handling middleware"
+                },
+                {
+                  "path": "src/middleware/validation.middleware.ts",
+                  "description": "Request validation utilities"
+                }
+              ],
+              "src/utils": [
+                {
+                  "path": "src/utils/response.util.ts",
+                  "description": "Standardized API response formatter"
+                },
+                {
+                  "path": "src/utils/logger.util.ts",
+                  "description": "Logging utility"
+                }
+              ],
+              "src/types": [
+                {
+                  "path": "src/types/task.types.ts",
+                  "description": "TypeScript interfaces for Task entity"
+                }
+              ]
+            }
+          },
+          "frontend": {
+            "root_files": [
+              {
+                "path": "package.json",
+                "description": "Frontend dependencies and scripts"
+              },
+              {
+                "path": "vite.config.ts",
+                "description": "Vite build tool configuration"
+              },
+              {
+                "path": "tsconfig.json",
+                "description": "TypeScript compiler options"
+              },
+              {
+                "path": "tailwind.config.js",
+                "description": "Tailwind CSS configuration"
+              },
+              {
+                "path": "index.html",
+                "description": "Main HTML entry point"
+              },
+              {
+                "path": ".gitignore",
+                "description": "Git ignore rules"
+              }
+            ],
+            "directories": {
+              "src/components": [
+                {
+                  "path": "src/components/TaskItem.tsx",
+                  "description": "Individual task display component"
+                },
+                {
+                  "path": "src/components/AddTaskForm.tsx",
+                  "description": "Form to create new tasks"
+                },
+                {
+                  "path": "src/components/Header.tsx",
+                  "description": "Application header/navigation"
+                }
+              ],
+              "src/pages": [
+                {
+                  "path": "src/pages/HomePage.tsx",
+                  "description": "Main dashboard showing all tasks"
+                }
+              ],
+              "src/hooks": [
+                {
+                  "path": "src/hooks/useTasks.ts",
+                  "description": "Custom hook for managing task state"
+                }
+              ],
+              "src/services": [
+                {
+                  "path": "src/services/taskApi.service.ts",
+                  "description": "API calls related to tasks"
+                }
+              ],
+              "src/context": [
+                {
+                  "path": "src/context/TaskContext.tsx",
+                  "description": "Global state management for tasks"
+                }
+              ],
+              "src/utils": [
+                {
+                  "path": "src/utils/formatters.ts",
+                  "description": "Utility functions for formatting data"
+                }
+              ],
+              "src/types": [
+                {
+                  "path": "src/types/task.types.ts",
+                  "description": "Shared TypeScript interfaces for Task"
+                }
+              ],
+              "src/styles": [
+                {
+                  "path": "src/styles/globals.css",
+                  "description": "Global styling including Tailwind imports"
+                }
+              ]
+            }
+          },
+          "database": {
+            "root_files": [
+              {
+                "path": "prisma/schema.prisma",
+                "description": "Prisma schema definition for database models"
+              }
+            ],
+            "directories": {}
+          }
+        },
+        "project_name": "To-Do Application",
+        "tech_stack": {
+          "frontend": "",
+          "backend": "",
+          "database": ""
+        }
+      },
+      "llm_calls": 33,
+      "completed_at": "2026-04-03T20:02:22.019112"
+    },
+    "testing": {
+      "status": "completed",
+      "phase": "testing",
+      "output_dir": "../PROJECTS\\Testing_Project_ea20f20a\\testing",
+      "artifacts": [
+        "test_backend.py",
+        "test_frontend.jsx",
+        "pytest.ini"
+      ],
+      "summary": {
+        "total_test_files": 3,
+        "backend_tests": true,
+        "frontend_tests": true,
+        "integration_tests": false
+      },
+      "llm_calls": 2,
+      "completed_at": "2026-04-03T20:03:56.240109"
+    },
+    "deployment": {
+      "status": "completed",
+      "phase": "deployment",
+      "output_dir": "../PROJECTS\\Testing_Project_ea20f20a\\deployment",
+      "artifacts": [
+        "Dockerfile.backend",
+        "Dockerfile.frontend",
+        "docker-compose.yml",
+        "nginx.conf",
+        ".github/workflows/ci.yml",
+        ".env.example"
+      ],
+      "summary": {
+        "total_deployment_files": 6,
+        "has_docker": true,
+        "has_cicd": true,
+        "has_nginx": true
+      },
+      "llm_calls": 4,
+      "completed_at": "2026-04-03T20:07:30.957664"
+    }
+  }
+}

@@ -18,6 +18,7 @@ from typing import Dict, Any
 
 from services.llm_service import LLMService
 from utils.file_writer import write_text_file, write_json_file
+from utils.pdf_generator import convert_md_to_pdf
 
 
 SYSTEM_PROMPT = """You are an expert software architect.
@@ -73,11 +74,15 @@ class Phase2Orchestrator:
         write_text_file(self.output_dir, "Design_Document.md", design_doc)
         write_json_file(self.output_dir, "design_metadata.json", design_summary)
 
+        # Also generate PDF version
+        pdf_path = os.path.join(self.output_dir, "Design_Document.pdf")
+        convert_md_to_pdf(design_doc, pdf_path)
+
         result = {
             "status": "completed",
             "phase": "design",
             "output_dir": self.output_dir,
-            "artifacts": ["Design_Document.md", "design_metadata.json"],
+            "artifacts": ["Design_Document.md", "Design_Document.pdf", "design_metadata.json"],
             "summary": design_summary,
             "llm_calls": self.llm_calls,
             "completed_at": datetime.now().isoformat(),
