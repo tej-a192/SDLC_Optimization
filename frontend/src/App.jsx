@@ -3,16 +3,19 @@ import Layout from './components/layout/Layout'
 import Dashboard from './pages/Dashboard'
 import ProjectWizard from './pages/ProjectWizard'
 import ProjectView from './pages/ProjectView'
+import { ThemeProvider } from './context/ThemeContext'
 
 function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/new" element={<ProjectWizard />} />
-        <Route path="/project/:projectId" element={<ProjectView />} />
-      </Routes>
-    </Layout>
+    <ThemeProvider>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/new" element={<ProjectWizard />} />
+          <Route path="/project/:projectId" element={<ProjectView />} />
+        </Routes>
+      </Layout>
+    </ThemeProvider>
   )
 }
 

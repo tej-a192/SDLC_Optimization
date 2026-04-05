@@ -512,20 +512,21 @@ export default function ProjectWizard() {
             {/* Step 1 */}
             {step === 1 && (
                 <div className="glass-card p-8 animate-fade-in-up delay-200" style={{ opacity: 0 }}>
-                    <h2 className="text-xl font-semibold text-white mb-6">Project Information</h2>
+                    <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Project Information</h2>
                     <div className="mb-6">
                         <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Project Name</label>
                         <input type="text" value={projectName} onChange={e => setProjectName(e.target.value)}
                             placeholder="e.g. E-Commerce Platform"
-                            className="w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 outline-none transition-all duration-200"
-                            style={{ background: 'var(--color-surface-light)', border: '1px solid var(--color-border)' }}
+                            className="w-full px-4 py-3 rounded-xl placeholder-gray-500 outline-none transition-all duration-200"
+                            style={{ background: 'var(--color-surface-light)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                             onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
                             onBlur={e => e.target.style.borderColor = 'var(--color-border)'} />
                     </div>
                     <button onClick={() => canProceedStep1 && setStep(2)} disabled={!canProceedStep1}
-                        className="w-full py-3 rounded-xl text-white font-medium transition-all duration-200 cursor-pointer"
+                        className="w-full py-3 rounded-xl font-medium transition-all duration-200 cursor-pointer"
                         style={{
                             background: canProceedStep1 ? 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' : 'var(--color-surface-lighter)',
+                            color: canProceedStep1 ? 'white' : 'var(--color-text-primary)',
                             opacity: canProceedStep1 ? 1 : 0.5,
                         }}>
                         Continue
@@ -536,7 +537,7 @@ export default function ProjectWizard() {
             {/* Step 2 */}
             {step === 2 && (
                 <div className="glass-card p-8 animate-fade-in-up">
-                    <h2 className="text-xl font-semibold text-white mb-6">SRS Document Input</h2>
+                    <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>SRS Document Input</h2>
                     <div className="flex gap-3 mb-6">
                         {[{ id: 'text', label: 'Paste Text', icon: FileText }, { id: 'pdf', label: 'Upload PDF', icon: Upload }].map(({ id, label, icon: Icon }) => (
                             <button key={id} onClick={() => setInputMethod(id)}
@@ -553,8 +554,8 @@ export default function ProjectWizard() {
                     {inputMethod === 'text' ? (
                         <textarea value={srsText} onChange={e => setSrsText(e.target.value)}
                             placeholder="Paste your Software Requirements Specification here..."
-                            rows={12} className="w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 resize-none outline-none transition-all duration-200"
-                            style={{ background: 'var(--color-surface-light)', border: '1px solid var(--color-border)' }}
+                            rows={12} className="w-full px-4 py-3 rounded-xl placeholder-gray-500 resize-none outline-none transition-all duration-200"
+                            style={{ background: 'var(--color-surface-light)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                             onFocus={e => e.target.style.borderColor = 'var(--color-primary)'}
                             onBlur={e => e.target.style.borderColor = 'var(--color-border)'} />
                     ) : (
@@ -579,9 +580,10 @@ export default function ProjectWizard() {
                         <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl font-medium cursor-pointer"
                             style={{ background: 'var(--color-surface-lighter)', color: 'var(--color-text-secondary)' }}>Back</button>
                         <button onClick={() => canProceedStep2 && setStep(3)} disabled={!canProceedStep2}
-                            className="flex-1 py-3 rounded-xl text-white font-medium cursor-pointer"
+                            className="flex-1 py-3 rounded-xl font-medium cursor-pointer"
                             style={{
                                 background: canProceedStep2 ? 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' : 'var(--color-surface-lighter)',
+                                color: canProceedStep2 ? 'white' : 'var(--color-text-primary)',
                                 opacity: canProceedStep2 ? 1 : 0.5,
                             }}>Continue</button>
                     </div>
@@ -591,7 +593,7 @@ export default function ProjectWizard() {
             {/* Step 3 */}
             {step === 3 && (
                 <div className="glass-card p-8 animate-fade-in-up">
-                    <h2 className="text-xl font-semibold text-white mb-6">Select AI Provider</h2>
+                    <h2 className="text-xl font-semibold mb-6" style={{ color: 'var(--color-text-primary)' }}>Select AI Provider</h2>
                     <div className="space-y-3 mb-6">
                         {LLM_PROVIDERS.map(({ id, name, model, context, icon: Icon, color, description }) => (
                             <button key={id} onClick={() => setLlmProvider(id)}
@@ -605,7 +607,7 @@ export default function ProjectWizard() {
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center gap-2">
-                                        <span className="font-medium text-white">{name}</span>
+                                        <span className="font-medium" style={{ color: 'var(--color-text-primary)' }}>{name}</span>
                                         <span className="px-2 py-0.5 rounded text-xs" style={{ background: `${color}20`, color }}>{model}</span>
                                     </div>
                                     <p className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{description} • {context}</p>
@@ -623,8 +625,8 @@ export default function ProjectWizard() {
                             <label className="block text-sm font-medium mb-2" style={{ color: 'var(--color-text-secondary)' }}>Ollama Server URL</label>
                             <input type="text" value={ollamaUrl} onChange={e => setOllamaUrl(e.target.value)}
                                 placeholder="http://localhost:11434"
-                                className="w-full px-4 py-3 rounded-xl text-white placeholder-gray-500 outline-none transition-all duration-200"
-                                style={{ background: 'var(--color-surface-light)', border: '1px solid var(--color-border)' }}
+                                className="w-full px-4 py-3 rounded-xl placeholder-gray-500 outline-none transition-all duration-200"
+                                style={{ background: 'var(--color-surface-light)', color: 'var(--color-text-primary)', border: '1px solid var(--color-border)' }}
                                 onFocus={e => e.target.style.borderColor = 'var(--color-warning)'}
                                 onBlur={e => e.target.style.borderColor = 'var(--color-border)'} />
                         </div>

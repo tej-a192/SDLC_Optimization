@@ -148,7 +148,7 @@ function EvaluationMetrics({ project }) {
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)' }}>
-                    <BarChart2 className="w-5 h-5 text-white" />
+                    <BarChart2 className="w-5 h-5" style={{ color: 'white' }} />
                 </div>
                 <div>
                     <h2 className="text-xl font-bold gradient-text">Evaluation & SDLC Output Metrics</h2>
@@ -444,7 +444,7 @@ export default function ProjectView() {
                                         <Icon className="w-5 h-5" style={{ color: config.color }} />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-white">Phase {config.phaseNum}: {config.label}</h3>
+                                        <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>Phase {config.phaseNum}: {config.label}</h3>
                                         <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{config.description}</p>
                                     </div>
                                 </div>

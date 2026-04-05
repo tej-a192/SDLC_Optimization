@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 /* ── Custom Design Tokens ── */
-@theme {
+/* Light mode (default) */
+:root {
   --color-primary: #6366f1;
   --color-primary-light: #818cf8;
   --color-primary-dark: #4f46e5;
@@ -10,19 +11,34 @@
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-danger: #ef4444;
-  --color-surface: #0f172a;
-  --color-surface-light: #1e293b;
-  --color-surface-lighter: #334155;
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
+  --color-surface: #ffffff;
+  --color-surface-light: #f8fafc;
+  --color-surface-lighter: #e2e8f0;
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #475569;
   --color-text-muted: #64748b;
-  --color-border: #334155;
-  --color-glass: rgba(15, 23, 42, 0.7);
+  --color-border: #cbd5e1;
+  --color-glass: rgba(255, 255, 255, 0.8);
+  --sidebar-bg: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  --scrollbar-thumb: #cbd5e1;
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
   --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
   --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark mode */
+.dark {
+  --color-surface: #0f172a;
+  --color-surface-light: #1e293b;
+  --color-surface-lighter: #334155;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-border: #334155;
+  --color-glass: rgba(15, 23, 42, 0.7);
+  --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #1a1033 100%);
+  --scrollbar-thumb: #334155;
 }
 
 /* ── Base Styles ── */
@@ -57,7 +73,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-lighter);
+  background: var(--scrollbar-thumb);
   border-radius: 3px;
 }
 

@@ -78,10 +78,10 @@ export default function Dashboard() {
                 <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center"
                         style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' }}>
-                        <Sparkles className="w-6 h-6 text-white" />
+                        <Sparkles className="w-6 h-6" style={{ color: 'white' }} />
                     </div>
                     <div>
-                        <h3 className="text-lg font-semibold text-white">Create New Project</h3>
+                        <h3 className="text-lg font-semibold" style={{ color: 'var(--color-text-primary)' }}>Create New Project</h3>
                         <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
                             Upload SRS document and generate a full project
                         </p>
@@ -123,7 +123,7 @@ export default function Dashboard() {
                                         <FolderOpen className="w-5 h-5" style={{ color: 'var(--color-primary-light)' }} />
                                     </div>
                                     <div>
-                                        <h3 className="font-semibold text-white">{project.project_name}</h3>
+                                        <h3 className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{project.project_name}</h3>
                                         <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                                             ID: {project.project_id}
                                         </p>

@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
-import { LayoutDashboard, PlusCircle, Cpu } from 'lucide-react'
+import { LayoutDashboard, PlusCircle, Cpu, Sun, Moon } from 'lucide-react'
+import { useTheme } from '../../context/ThemeContext'
 
 const navItems = [
     { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -8,13 +9,14 @@ const navItems = [
 
 export default function Layout({ children }) {
     const location = useLocation()
+    const { theme, toggleTheme } = useTheme()
 
     return (
         <div className="min-h-screen flex">
             {/* Sidebar */}
             <aside className="w-72 fixed top-0 left-0 h-screen flex flex-col"
                 style={{
-                    background: 'linear-gradient(180deg, #0f172a 0%, #1a1033 100%)',
+                    background: 'var(--sidebar-bg)',
                     borderRight: '1px solid var(--color-border)',
                 }}
             >
@@ -22,10 +24,10 @@ export default function Layout({ children }) {
                 <div className="p-6 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center animate-pulse-glow"
                         style={{ background: 'linear-gradient(135deg, var(--color-primary), var(--color-secondary))' }}>
-                        <Cpu className="w-5 h-5 text-white" />
+                        <Cpu className="w-5 h-5" style={{ color: 'white' }} />
                     </div>
                     <div>
-                        <h1 className="text-lg font-bold text-white tracking-tight">SDLC</h1>
+                        <h1 className="text-lg font-bold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>SDLC</h1>
                         <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Optimization Framework</p>
                     </div>
                 </div>
@@ -60,6 +62,18 @@ export default function Layout({ children }) {
 
                 {/* Footer */}
                 <div className="p-4 mx-4 mb-4 rounded-xl" style={{ background: 'rgba(99, 102, 241, 0.08)' }}>
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
+                            Theme
+                        </span>
+                        <button
+                            onClick={toggleTheme}
+                            className="p-1 rounded-md hover:bg-white/10 transition-colors"
+                            style={{ color: 'var(--color-text-secondary)' }}
+                        >
+                            {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                        </button>
+                    </div>
                     <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                         AI-Powered SDLC Pipeline
                     </p>
