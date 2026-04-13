@@ -93,20 +93,31 @@ async def create_project(
 
     # ── Run the Main Orchestrator (all 5 phases with LLM) ──
     orchestrator = MainOrchestrator(llm, project_dir)
-    phases_result = orchestrator.run(raw_srs_text, rag_context)
+    pipeline_created_at = datetime.now().isoformat()
+    pipeline_result = orchestrator.run(
+        raw_srs_text,
+        rag_context,
+        project_name=project_name,
+        project_created_at=pipeline_created_at,
+    )
+
+    # Unpack result — orchestrator now returns {phases, evaluation_metrics}
+    phases_result      = pipeline_result.get("phases",             {})
+    evaluation_metrics = pipeline_result.get("evaluation_metrics", {})
 
     # Ensure the correct path and name are saved
     project_dir = orchestrator.project_dir
     final_project_name = project_name
 
-    # Build and save project metadata
+    # Build and save project metadata (includes evaluation_metrics for every project)
     metadata = {
         "project_name": final_project_name,
         "project_id": project_id,
-        "created_at": datetime.now().isoformat(),
+        "created_at": pipeline_created_at,
         "srs_input_method": "pdf" if srs_file else "text",
         "llm_provider": llm_provider,
         "phases": phases_result,
+        "evaluation_metrics": evaluation_metrics,
     }
 
     metadata_path = os.path.join(project_dir, "project_metadata.json")

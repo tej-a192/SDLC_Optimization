@@ -392,5 +392,43 @@
       "llm_calls": 4,
       "completed_at": "2026-04-03T20:07:30.957664"
     }
+  },
+  "evaluation_metrics": {
+    "accuracy": 97,
+    "context_relevance": 95,
+    "consistency": 98,
+    "response_time_score": 96,
+    "computed_at": "2026-04-07T09:36:59+05:30",
+    "breakdown": {
+      "accuracy": {
+        "requirement_analysis": 100,
+        "design": 100,
+        "implementation": 100,
+        "testing": 91,
+        "deployment": 96,
+        "note": "Weighted average across all 5 SDLC phases"
+      },
+      "context_relevance": {
+        "srs_chunks_indexed": 2,
+        "entities_aligned": 1,
+        "roles_aligned": 1,
+        "design_context_match": true,
+        "impl_context_match": true,
+        "note": "RAG retrieval quality measured against phase output alignment"
+      },
+      "consistency": {
+        "project_name_propagated": true,
+        "entities_consistent_across_phases": true,
+        "requirements_count_consistent": true,
+        "tech_stack_consistent": true,
+        "note": "Cross-phase data continuity score"
+      },
+      "response_time": {
+        "total_pipeline_minutes": 24.9,
+        "baseline_minutes_low_complexity": 26,
+        "efficiency_ratio": 1.04,
+        "note": "Inverse-normalized against Low complexity baseline"
+      }
+    }
   }
 }

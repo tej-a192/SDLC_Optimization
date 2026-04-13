@@ -23,22 +23,26 @@ class MainOrchestrator:
         self.project_dir = project_dir
         self.context = {}  # Accumulated context passed between phases
 
-    def run(self, srs_text: str, rag_context: Dict[str, Any]) -> Dict[str, Any]:
+    def run(self, srs_text: str, rag_context: Dict[str, Any],
+            project_name: str = "", project_created_at: str = "") -> Dict[str, Any]:
         """
         Execute the full 5-phase SDLC pipeline.
 
         Returns:
-            Dictionary of phase results keyed by phase name.
+            Dictionary with keys:
+              - "phases"             → phase results keyed by phase name
+              - "evaluation_metrics" → computed quality metrics dict
         """
         phases_result = {}
         start_time = time.time()
+        pipeline_start = project_created_at or datetime.now().isoformat()
 
         print("=" * 60)
         print("[Main Orchestrator] Starting SDLC Pipeline")
         print("=" * 60)
 
         # Store base context
-        self.context["srs_text"] = srs_text
+        self.context["srs_text"]    = srs_text
         self.context["rag_context"] = rag_context
 
         # ── Phase 1: Requirement Analysis ──
@@ -49,9 +53,6 @@ class MainOrchestrator:
         phases_result["requirement_analysis"] = p1_result
         self.context["phase1_summary"] = p1_result.get("summary", {})
         print(f"  ✓ Phase 1 complete ({p1_result.get('llm_calls', 0)} LLM calls)")
-
-
-
 
         # ── Phase 2: Design ──
         print("\n[Phase 2/5] Design...")
@@ -92,10 +93,31 @@ class MainOrchestrator:
         elapsed = round(time.time() - start_time, 1)
         total_llm_calls = sum(r.get("llm_calls", 0) for r in phases_result.values())
 
+        # ── Evaluation Metrics ──
+        print("\n[Metrics] Computing evaluation metrics...")
+        try:
+            from services.metrics_calculator import MetricsCalculator
+            calculator = MetricsCalculator()
+            evaluation_metrics = calculator.compute(
+                phases=phases_result,
+                project_name=project_name,
+                project_created_at=pipeline_start,
+            )
+            print(f"  ✓ Accuracy: {evaluation_metrics['accuracy']}%")
+            print(f"  ✓ Context Relevance: {evaluation_metrics['context_relevance']}%")
+            print(f"  ✓ Consistency: {evaluation_metrics['consistency']}%")
+            print(f"  ✓ Response Time Score: {evaluation_metrics['response_time_score']}%")
+        except Exception as e:
+            print(f"  ⚠ Metrics computation failed (non-fatal): {e}")
+            evaluation_metrics = {}
+
         print("\n" + "=" * 60)
         print(f"[Main Orchestrator] Pipeline Complete!")
         print(f"  Total LLM calls: {total_llm_calls}")
         print(f"  Total time: {elapsed}s")
         print("=" * 60)
 
-        return phases_result
+        return {
+            "phases":             phases_result,
+            "evaluation_metrics": evaluation_metrics,
+        }
