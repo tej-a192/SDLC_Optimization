@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do Application</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>NeonDo — Conquer Your Day</title>
+    <meta name="description" content="The world's most vibrant and intelligent task manager. Integrate calendars, track analytics, and stay productive.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      body { background-color: #f6ffe8; font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div id="root" class="container mx-auto px-4 py-8 max-w-2xl"></div>
-    
-    <script type="module">
-        import { createApp } from './src/main.tsx';
-        
-        // Initialize the application
-        createApp(document.getElementById('root'));
-    </script>
+<body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

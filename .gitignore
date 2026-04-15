@@ -9,3 +9,7 @@ build/
 .pytest_cache/
 chroma_db/
 
+node_modules/
+frontend/node_modules/
+code.txt
+files_md.sh

@@ -1,105 +1,129 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import TaskForm from '../components/TaskForm';
-import TaskList from '../components/TaskList';
 import { ITask } from '../types/task';
+import AddTaskForm from '../components/AddTaskForm';
+import TaskItem from '../components/TaskItem';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const HomePage: React.FC = () => {
+const TasksPage: React.FC = () => {
   const [tasks, setTasks] = useState<ITask[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  /**
-   * Fetches all tasks from the backend API
-   */
-  const fetchTasks = async () => {
-    try {
-      const response = await axios.get('/api/tasks');
-      setTasks(response.data);
-      setError(null);
-    } catch (err) {
-      setError('Failed to fetch tasks');
-      console.error('Error fetching tasks:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  /**
-   * Adds a new task to the list
-   * @param task - The task to add
-   */
-  const handleAddTask = (task: ITask) => {
-    setTasks([...tasks, task]);
-  };
-
-  /**
-   * Updates a task's completion status
-   * @param id - The ID of the task to toggle
-   */
-  const handleToggleTask = async (id: number) => {
-    try {
-      const taskToUpdate = tasks.find(task => task.id === id);
-      if (!taskToUpdate) return;
-
-      const response = await axios.patch(`/api/tasks/${id}/toggle`, {
-        completed: !taskToUpdate.completed
-      });
-
-      setTasks(tasks.map(task => 
-        task.id === id ? response.data : task
-      ));
-    } catch (err) {
-      setError('Failed to update task');
-      console.error('Error toggling task:', err);
-    }
-  };
-
-  /**
-   * Deletes a task from the list
-   * @param id - The ID of the task to delete
-   */
-  const handleDeleteTask = async (id: number) => {
-    try {
-      await axios.delete(`/api/tasks/${id}`);
-      setTasks(tasks.filter(task => task.id !== id));
-    } catch (err) {
-      setError('Failed to delete task');
-      console.error('Error deleting task:', err);
-    }
-  };
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'all' | 'today' | 'important'>('all');
 
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  if (loading) {
-    return <div className="container mx-auto p-4">Loading...</div>;
-  }
+  const fetchTasks = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get('/api/tasks');
+      setTasks(res.data);
+    } catch (err) {
+      setError('Failed to fetch tasks');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddTask = async (taskData: Omit<ITask, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const response = await axios.post('/api/tasks', taskData);
+      setTasks([response.data, ...tasks]);
+    } catch (err) {
+      setError('Failed to add task');
+      console.error(err);
+    }
+  };
+
+  const handleToggleTask = async (id: string) => {
+    try {
+      await axios.patch(`/api/tasks/${id}/toggle`);
+      setTasks(tasks.map(t =>(t.id === id ? { ...t, completed: !t.completed } : t)));
+    } catch (err) {
+      setError('Failed to update task');
+      console.error(err);
+    }
+  };
+
+  const handleDeleteTask = async (id: string) => {
+    try {
+      await axios.delete(`/api/tasks/${id}`);
+      setTasks(tasks.filter(t => t.id !== id));
+    } catch (err) {
+      setError('Failed to delete task');
+      console.error(err);
+    }
+  };
+
+  const filteredTasks = tasks.filter(task => {
+    if (activeTab === 'all') return true;
+    if (activeTab === 'important') return task.priority === 'high';
+    if (activeTab === 'today') {
+      if (!task.dueDate) return false;
+      const due = new Date(task.dueDate);
+      const today = new Date();
+      return due.toDateString() === today.toDateString();
+    }
+    return true;
+  });
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">To-Do List</h1>
-      
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
+    <div className="container mx-auto px-6 py-12 max-w-4xl">
+      <div className="flex justify-between items-end mb-8">
+        <div>
+          <h1 className="text-4xl font-black text-primaryDark mb-2">My Tasks</h1>
+          <p className="text-textMuted font-medium">Keep your focus crystal clear.</p>
         </div>
-      )}
-
-      <div className="mb-8">
-        <TaskForm onTaskAdded={handleAddTask} />
       </div>
 
-      <div>
-        <TaskList 
-          tasks={tasks} 
-          onToggle={handleToggleTask} 
-          onDelete={handleDeleteTask} 
-        />
+      <AddTaskForm onAddTask={handleAddTask} />
+
+      {error && <div className="p-4 bg-red-100 text-red-600 rounded-xl my-6">{error}</div>}
+
+      <div className="flex gap-4 mt-12 mb-6 border-b-2 border-primary/20 pb-2">
+        {(['all', 'today', 'important'] as const).map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 font-bold capitalize transition-colors relative ${activeTab === tab ? 'text-primaryDark' : 'text-textMuted hover:text-primaryDark'}`}
+          >
+            {tab}
+            {activeTab === tab && (
+              <motion.div layoutId="taskTab" className="absolute bottom-[-10px] left-0 w-full h-1 bg-primary shadow-neon rounded-full" />
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-6 flex flex-col gap-4">
+        {loading ? (
+           <div className="text-center py-20 animate-pulse text-primaryDark font-bold">Synchronizing with MongoDB...</div>
+        ) : filteredTasks.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} 
+            className="text-center py-20 glass-panel"
+          >
+            <h3 className="text-2xl font-bold text-primaryDark">Clear skies!</h3>
+            <p className="text-textMuted">No tasks found in this view.</p>
+          </motion.div>
+        ) : (
+          <AnimatePresence>
+            {filteredTasks.map(task => (
+              <TaskItem 
+                key={task.id} 
+                task={task} 
+                onToggle={handleToggleTask} 
+                onDelete={handleDeleteTask} 
+              />
+            ))}
+          </AnimatePresence>
+        )}
       </div>
     </div>
   );
 };
 
-export default HomePage;
+export default TasksPage;

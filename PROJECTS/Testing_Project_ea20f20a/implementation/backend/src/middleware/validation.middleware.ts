@@ -32,23 +32,26 @@ export const taskValidationRules = () => {
 export const taskIdValidationRule = () => {
   return [
     param('id')
-      .isInt({ gt: 0 })
-      .withMessage('ID must be a positive integer')
+      .isString()
+      .withMessage('ID must be a valid string')
+      .isLength({ min: 10 })
+      .withMessage('ID must be a valid length')
   ];
 };
 
 /**
  * Middleware to check for validation errors
  */
-export const validate = (req: Request, res: Response, next: NextFunction) => {
+export const validate = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   
   if (!errors.isEmpty()) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       message: 'Validation failed',
       errors: errors.array()
     });
+    return;
   }
   
   next();

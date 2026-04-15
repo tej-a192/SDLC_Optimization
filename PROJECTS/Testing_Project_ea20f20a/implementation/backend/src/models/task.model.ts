@@ -1,72 +1,38 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import { sequelize } from '../config/database.config';
+import mongoose, { Document, Schema } from 'mongoose';
 
-/**
- * Interface for Task attributes
- */
-export interface ITaskAttributes {
-  id: number;
+export interface ITask extends Document {
   title: string;
   description?: string;
   completed: boolean;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: Date;
+  category: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-/**
- * Interface for Task creation attributes
- * Makes id, createdAt, and updatedAt optional during creation
- */
-export interface ITaskCreationAttributes extends Optional<ITaskAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
-
-/**
- * Task Model Class
- * Represents a task in the database
- */
-export class Task extends Model<ITaskAttributes, ITaskCreationAttributes> implements ITaskAttributes {
-  public id!: number;
-  public title!: string;
-  public description!: string;
-  public completed!: boolean;
-  public createdAt!: Date;
-  public updatedAt!: Date;
-}
-
-// Initialize the Task model
-Task.init(
+const TaskSchema: Schema = new Schema(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    title: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: true,
-    },
-    completed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-      allowNull: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+    title: { type: String, required: true, trim: true, maxlength: 255 },
+    description: { type: String, trim: true },
+    completed: { type: Boolean, default: false },
+    priority: { type: String, enum: ['low', 'medium', 'high'], default: 'low' },
+    dueDate: { type: Date },
+    category: { type: String, default: 'Inbox', trim: true }
   },
   {
-    sequelize,
-    tableName: 'tasks',
-    modelName: 'Task',
-    timestamps: true,
-    underscored: true,
+    timestamps: true, // Automatically manages createdAt and updatedAt
   }
 );
+
+// Mongoose intercepts 'id' natively with _id. We can add a toJSON transform to expose 'id'
+TaskSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    ret.id = ret._id;
+    delete ret._id;
+  }
+});
+
+export const Task = mongoose.model<ITask>('Task', TaskSchema);
